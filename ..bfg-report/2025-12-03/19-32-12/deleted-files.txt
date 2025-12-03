@@ -1,0 +1,2 @@
+dc8d768cef361cdcc89d87995fc67653a033e011 12613150 candidates_processed.pkl
+bfefa312cfacf0dca048029fcd24b924fe53ebe2 49948296 companies_processed.pkl

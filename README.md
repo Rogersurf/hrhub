@@ -1,3 +1,14 @@
+---
+title: HRHUB
+emoji: 💼
+colorFrom: green
+colorTo: blue
+sdk: streamlit
+sdk_version: "1.34.0"
+app_file: app.py
+pinned: true
+---
+
 # 🏢 HRHUB - HR Matching System
 
 **Bilateral Matching Engine for Candidates & Companies**
@@ -6,7 +17,7 @@ A professional HR matching system using NLP embeddings and cosine similarity to 
 
 ---
 
-## 🎯 Project Overview
+
 
 HRHUB solves a fundamental inefficiency in hiring: candidates and companies use different vocabularies when describing skills and requirements. Our system bridges this gap using **job postings** as a translator, enriching company profiles to speak the same "skills language" as candidates.
 

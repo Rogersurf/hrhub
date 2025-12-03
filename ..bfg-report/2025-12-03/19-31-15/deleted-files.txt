@@ -1,0 +1,2 @@
+baa8c75135c57050fbe02cd2be118293103b9b70 14659712 candidate_embeddings.npy
+386fd81b66cbb1111fe7a1152e2a507e00e2c230 54968960 company_embeddings.npy
