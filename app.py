@@ -14,10 +14,9 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 
 from config import *
-from data.mock_data import (
-    get_candidate_data,
-    get_company_matches,
-    get_network_graph_data
+from data.data_loader import (
+    load_embeddings,
+    find_top_matches
 )
 from utils.display import (
     display_candidate_profile,
@@ -124,14 +123,6 @@ def render_header():
     
     st.markdown(f'<h1 class="main-title">{APP_TITLE}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="sub-title">{APP_SUBTITLE}</p>', unsafe_allow_html=True)
-    
-    # Demo mode indicator
-    if DEMO_MODE:
-        st.info(
-            "🎭 **Demo Mode Active** - Displaying hardcoded sample data. "
-            "This will be replaced with real matching when embeddings are loaded.",
-            icon="ℹ️"
-        )
 
 
 def render_sidebar():
@@ -170,7 +161,7 @@ def render_sidebar():
         st.markdown("### 👀 View Mode")
         view_mode = st.radio(
             "Select view:",
-            ["📊 Overview", "📝 Detailed Cards", "📈 Table View"],
+            ["📊 Overview", "🔍 Detailed Cards", "📈 Table View"],
             help="Choose how to display company matches"
         )
         
@@ -207,14 +198,48 @@ def render_sidebar():
         return top_k, min_score, view_mode
 
 
-def render_network_section(candidate_id: int, top_k: int):
+def get_network_graph_data(candidate_id, matches):
+    """Generate network graph data from matches."""
+    nodes = []
+    edges = []
+    
+    # Add candidate node
+    nodes.append({
+        'id': f'C{candidate_id}',
+        'label': f'Candidate #{candidate_id}',
+        'color': '#4ade80',
+        'shape': 'dot',
+        'size': 30
+    })
+    
+    # Add company nodes and edges
+    for comp_id, score, comp_data in matches:
+        nodes.append({
+            'id': f'COMP{comp_id}',
+            'label': comp_data.get('name', f'Company {comp_id}')[:30],
+            'color': '#ff6b6b',
+            'shape': 'box',
+            'size': 20
+        })
+        
+        edges.append({
+            'from': f'C{candidate_id}',
+            'to': f'COMP{comp_id}',
+            'value': float(score) * 10,
+            'title': f'{score:.3f}'
+        })
+    
+    return {'nodes': nodes, 'edges': edges}
+
+
+def render_network_section(candidate_id: int, matches):
     """Render interactive network visualization section."""
     
     st.markdown('<div class="section-header">🕸️ Network Visualization</div>', unsafe_allow_html=True)
     
     with st.spinner("Generating interactive network graph..."):
         # Get graph data
-        graph_data = get_network_graph_data(candidate_id, top_k)
+        graph_data = get_network_graph_data(candidate_id, matches)
         
         # Create HTML graph
         html_content = create_network_graph(
@@ -252,7 +277,7 @@ def render_matches_section(matches, view_mode: str):
         # Table view
         display_match_table(matches)
         
-    elif view_mode == "📝 Detailed Cards":
+    elif view_mode == "🔍 Detailed Cards":
         # Card view - detailed
         for rank, (comp_id, score, comp_data) in enumerate(matches, 1):
             display_company_card(comp_data, score, rank)
@@ -277,12 +302,35 @@ def main():
     # Main content area
     st.markdown("---")
     
+    # Load embeddings (cache in session state)
+    if 'embeddings_loaded' not in st.session_state:
+        with st.spinner("🔄 Loading embeddings and data..."):
+            cand_emb, comp_emb, cand_df, comp_df = load_embeddings()
+            st.session_state.embeddings_loaded = True
+            st.session_state.candidate_embeddings = cand_emb
+            st.session_state.company_embeddings = comp_emb
+            st.session_state.candidates_df = cand_df
+            st.session_state.companies_df = comp_df
+            st.success("✅ Data loaded successfully!")
+    
     # Load candidate data
     candidate_id = DEMO_CANDIDATE_ID
-    candidate = get_candidate_data(candidate_id)
+    candidate = st.session_state.candidates_df.iloc[candidate_id]
     
     # Load company matches
-    matches = get_company_matches(candidate_id, top_k)
+    matches_list = find_top_matches(
+        candidate_id,
+        st.session_state.candidate_embeddings,
+        st.session_state.company_embeddings,
+        st.session_state.companies_df,
+        top_k
+    )
+    
+    # Format matches for display
+    matches = [
+        (m['company_id'], m['score'], st.session_state.companies_df.iloc[m['company_id']])
+        for m in matches_list
+    ]
     
     # Filter by minimum score
     matches = [(cid, score, cdata) for cid, score, cdata in matches if score >= min_score]
@@ -309,16 +357,9 @@ def main():
     st.markdown("---")
     
     # Network visualization (full width)
-    render_network_section(candidate_id, len(matches))
+    render_network_section(candidate_id, matches)
     
     st.markdown("---")
-    
-    # Footer with instructions
-    st.success(
-        "✅ **MVP Demo Ready!** This interface shows the core functionality. "
-        "Next step: Replace mock data with real embeddings for dynamic matching.",
-        icon="🎉"
-    )
     
     # Technical info expander
     with st.expander("🔧 Technical Details", expanded=False):
@@ -328,18 +369,14 @@ def main():
             - Similarity Metric: Cosine Similarity
             - Top K Matches: {top_k}
             - Minimum Score: {min_score:.0%}
-            - Demo Mode: {'✅ Enabled' if DEMO_MODE else '❌ Disabled'}
-            
-            **Data Sources:**
-            - Candidates: 9,544 profiles
-            - Companies: 180,000 entities
-            - Job Postings: 700 (bridge data)
+            - Candidates Loaded: {len(st.session_state.candidates_df):,}
+            - Companies Loaded: {len(st.session_state.companies_df):,}
             
             **Algorithm:**
-            1. Text representation of candidates/companies
-            2. Sentence transformer embeddings (384D)
-            3. Cosine similarity calculation
-            4. Top-K ranking
+            1. Load pre-computed embeddings (.npy files)
+            2. Calculate cosine similarity
+            3. Rank companies by similarity score
+            4. Return top-K matches
         """)
 
 
