@@ -182,7 +182,7 @@ def display_match_table(
     # Style the dataframe
     st.dataframe(
         df,
-        width='stretch',
+        use_container_width=True,
         hide_index=True,
         column_config={
             "Rank": st.column_config.TextColumn(width="small"),

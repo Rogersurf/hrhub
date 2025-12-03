@@ -129,7 +129,7 @@ def render_sidebar():
     """Render sidebar with controls and information."""
     
     with st.sidebar:
-        st.image("https://via.placeholder.com/250x80/0066CC/FFFFFF?text=HRHUB", use_container_width=True)
+        st.image("https://via.placeholder.com/250x80/0066CC/FFFFFF?text=HRHUB", width=250)
         
         st.markdown("---")
         
