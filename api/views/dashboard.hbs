@@ -8,10 +8,45 @@
 <body>
     <div class="container">
         <h1>🏢 HRHUB - HR MATCHING SYSTEM</h1>
-        <p>Bilateral Matching Engine</p>
-        <div class="status">
-            <p>✅ NestJS + Handlebars working!</p>
-            <p>Candidate: {{candidateName}}</p>
+        <p class="subtitle">Bilateral Matching Engine</p>
+        
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">{{totalMatches}}</div>
+                <div class="stat-label">Total Matches</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{avgScore}}</div>
+                <div class="stat-label">Avg Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{bestScore}}</div>
+                <div class="stat-label">Best Match</div>
+            </div>
+        </div>
+
+        <!-- Candidate Info -->
+        <div class="candidate-card">
+            <h2>👤 {{candidate.name}}</h2>
+            <p><strong>Skills:</strong> {{#each candidate.skills}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+            <p><strong>Experience:</strong> {{candidate.experience}}</p>
+            <p><strong>Education:</strong> {{candidate.education}}</p>
+        </div>
+
+        <!-- Matches List -->
+        <div class="matches-section">
+            <h2>🎯 TOP COMPANY MATCHES</h2>
+            {{#each matches}}
+            <div class="match-card">
+                <div class="match-header">
+                    <span class="match-rank">#{{@index}}</span>
+                    <span class="match-company">{{this.companyName}}</span>
+                    <span class="match-score">{{this.score}}</span>
+                </div>
+                <div class="match-title">{{this.jobTitle}}</div>
+            </div>
+            {{/each}}
         </div>
     </div>
 </body>
