@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "green", "font": {"color": "white"}, "id": "C0", "label": "Cand 0", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C1", "label": "Cand 1", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C2", "label": "Cand 2", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C3", "label": "Cand 3", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C4", "label": "Cand 4", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C5", "label": "Cand 5", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C6", "label": "Cand 6", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C7", "label": "Cand 7", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C8", "label": "Cand 8", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C9", "label": "Cand 9", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C10", "label": "Cand 10", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C11", "label": "Cand 11", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C12", "label": "Cand 12", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C13", "label": "Cand 13", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C14", "label": "Cand 14", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C15", "label": "Cand 15", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C16", "label": "Cand 16", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C17", "label": "Cand 17", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C18", "label": "Cand 18", "shape": "dot", "size": 25}, {"color": "green", "font": {"color": "white"}, "id": "C19", "label": "Cand 19", "shape": "dot", "size": 25}, {"color": "red", "font": {"color": "white"}, "id": "J9418", "label": "Anblicks", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J30989", "label": "iO Associates - US", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J9417", "label": "Anblicks", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J30990", "label": "iO Associates - US", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J9416", "label": "Anblicks", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J10140", "label": "Analytic Recruiting ", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J20529", "label": "Logikk", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J30163", "label": "Heliosz.AI", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J17134", "label": "BPO Recruit", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J28802", "label": "IntellectFaces, Inc", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J21756", "label": "maven", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J9454", "label": "Digital Prospectors", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J18817", "label": "Tekniforce", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J27159", "label": "Neva Recruiting", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J33214", "label": "micro1", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J26293", "label": "Ampstek", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J26294", "label": "Ampstek", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J26295", "label": "Ampstek", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J26296", "label": "Ampstek", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J27249", "label": "CivicMinds, Inc", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J23927", "label": "Swift Strategic Solu", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J237", "label": "National Security Ag", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J23926", "label": "Swift Strategic Solu", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J25745", "label": "AcctPositions", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J35525", "label": "Family Estate Planni", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J13170", "label": "Understanding Recrui", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J27248", "label": "CivicMinds, Inc", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J32967", "label": "Protechture, LLC", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J31028", "label": "GAC Solutions", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J31029", "label": "GAC Solutions", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J29286", "label": "Ram Mechanical Inc.", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J20702", "label": " EGN Consult \u0026 Recru", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J35720", "label": "Industrial Technical", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J29568", "label": "Rhino Tool House", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J15399", "label": "Professional Enginee", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J34106", "label": "Vedan Technologies", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J33708", "label": "Hire Python Develope", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J16166", "label": "Udemy", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J17102", "label": "OpenSesame", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J23925", "label": "Cephas Consultancy S", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J13500", "label": "HSI", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J10100", "label": "USM Business Systems", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J18151", "label": "SolidProfessor", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J18454", "label": "Google DeepMind", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J26422", "label": "Virtual Labs Inc.", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J20970", "label": "Lambda", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J10750", "label": "The Finders", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J34422", "label": "Cross Platform Devel", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J24818", "label": "Appzlogic ", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J13786", "label": "Datavail", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J16152", "label": "Infomatics Corp", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J16035", "label": "MongoDB", "shape": "dot", "size": 15}, {"color": "red", "font": {"color": "white"}, "id": "J9778", "label": "Pluralsight", "shape": "dot", "size": 15}]);
+                  edges = new vis.DataSet([{"from": "C0", "title": "0.703", "to": "J9418", "value": 7.028056979179382}, {"from": "C0", "title": "0.703", "to": "J30989", "value": 7.0262110233306885}, {"from": "C0", "title": "0.703", "to": "J9417", "value": 7.02572226524353}, {"from": "C0", "title": "0.702", "to": "J30990", "value": 7.019376754760742}, {"from": "C0", "title": "0.701", "to": "J9416", "value": 7.010321617126465}, {"from": "C1", "title": "0.620", "to": "J10140", "value": 6.20457649230957}, {"from": "C1", "title": "0.620", "to": "J20529", "value": 6.201968193054199}, {"from": "C1", "title": "0.589", "to": "J30163", "value": 5.894620418548584}, {"from": "C1", "title": "0.577", "to": "J17134", "value": 5.765535235404968}, {"from": "C1", "title": "0.576", "to": "J28802", "value": 5.755815505981445}, {"from": "C2", "title": "0.619", "to": "J21756", "value": 6.18832528591156}, {"from": "C2", "title": "0.617", "to": "J9454", "value": 6.172588467597961}, {"from": "C2", "title": "0.613", "to": "J18817", "value": 6.127530932426453}, {"from": "C2", "title": "0.608", "to": "J27159", "value": 6.082639694213867}, {"from": "C2", "title": "0.600", "to": "J33214", "value": 6.003042459487915}, {"from": "C3", "title": "0.589", "to": "J26293", "value": 5.888209939002991}, {"from": "C3", "title": "0.589", "to": "J26294", "value": 5.888209939002991}, {"from": "C3", "title": "0.589", "to": "J26295", "value": 5.888209939002991}, {"from": "C3", "title": "0.589", "to": "J26296", "value": 5.888209939002991}, {"from": "C3", "title": "0.534", "to": "J27249", "value": 5.344255566596985}, {"from": "C4", "title": "0.515", "to": "J23927", "value": 5.154691934585571}, {"from": "C4", "title": "0.515", "to": "J237", "value": 5.150743722915649}, {"from": "C4", "title": "0.514", "to": "J23926", "value": 5.135759115219116}, {"from": "C4", "title": "0.506", "to": "J25745", "value": 5.0571417808532715}, {"from": "C4", "title": "0.495", "to": "J35525", "value": 4.94664192199707}, {"from": "C5", "title": "0.624", "to": "J13170", "value": 6.2363749742507935}, {"from": "C5", "title": "0.590", "to": "J27249", "value": 5.904499888420105}, {"from": "C5", "title": "0.589", "to": "J27248", "value": 5.891878008842468}, {"from": "C5", "title": "0.587", "to": "J32967", "value": 5.873211622238159}, {"from": "C5", "title": "0.567", "to": "J18817", "value": 5.669974684715271}, {"from": "C6", "title": "0.528", "to": "J23927", "value": 5.282142162322998}, {"from": "C6", "title": "0.528", "to": "J23926", "value": 5.279108881950378}, {"from": "C6", "title": "0.504", "to": "J237", "value": 5.036947131156921}, {"from": "C6", "title": "0.501", "to": "J31028", "value": 5.008084774017334}, {"from": "C6", "title": "0.501", "to": "J31029", "value": 5.008084774017334}, {"from": "C7", "title": "0.541", "to": "J29286", "value": 5.409826636314392}, {"from": "C7", "title": "0.513", "to": "J20702", "value": 5.132828950881958}, {"from": "C7", "title": "0.511", "to": "J35720", "value": 5.112812519073486}, {"from": "C7", "title": "0.511", "to": "J29568", "value": 5.1084864139556885}, {"from": "C7", "title": "0.510", "to": "J15399", "value": 5.098806619644165}, {"from": "C8", "title": "0.523", "to": "J34106", "value": 5.231214761734009}, {"from": "C8", "title": "0.521", "to": "J9454", "value": 5.210273861885071}, {"from": "C8", "title": "0.517", "to": "J20529", "value": 5.1720041036605835}, {"from": "C8", "title": "0.516", "to": "J13170", "value": 5.163518190383911}, {"from": "C8", "title": "0.514", "to": "J28802", "value": 5.135617256164551}, {"from": "C9", "title": "0.608", "to": "J33708", "value": 6.077218055725098}, {"from": "C9", "title": "0.585", "to": "J9454", "value": 5.8520495891571045}, {"from": "C9", "title": "0.570", "to": "J30990", "value": 5.695323944091797}, {"from": "C9", "title": "0.569", "to": "J30989", "value": 5.691220760345459}, {"from": "C9", "title": "0.566", "to": "J13170", "value": 5.657694339752197}, {"from": "C10", "title": "0.586", "to": "J27159", "value": 5.86123526096344}, {"from": "C10", "title": "0.586", "to": "J16166", "value": 5.860676169395447}, {"from": "C10", "title": "0.577", "to": "J26293", "value": 5.769027471542358}, {"from": "C10", "title": "0.577", "to": "J26294", "value": 5.769027471542358}, {"from": "C10", "title": "0.577", "to": "J26295", "value": 5.769027471542358}, {"from": "C11", "title": "0.593", "to": "J9454", "value": 5.932710766792297}, {"from": "C11", "title": "0.582", "to": "J17102", "value": 5.818200707435608}, {"from": "C11", "title": "0.564", "to": "J23925", "value": 5.643590092658997}, {"from": "C11", "title": "0.559", "to": "J13500", "value": 5.586053133010864}, {"from": "C11", "title": "0.553", "to": "J26293", "value": 5.532607436180115}, {"from": "C12", "title": "0.629", "to": "J20529", "value": 6.294257044792175}, {"from": "C12", "title": "0.623", "to": "J30163", "value": 6.232224702835083}, {"from": "C12", "title": "0.623", "to": "J10140", "value": 6.227796673774719}, {"from": "C12", "title": "0.592", "to": "J28802", "value": 5.915536284446716}, {"from": "C12", "title": "0.587", "to": "J10100", "value": 5.873672366142273}, {"from": "C13", "title": "0.511", "to": "J18151", "value": 5.108709931373596}, {"from": "C13", "title": "0.509", "to": "J13170", "value": 5.0925469398498535}, {"from": "C13", "title": "0.507", "to": "J18454", "value": 5.072507858276367}, {"from": "C13", "title": "0.491", "to": "J26422", "value": 4.905799925327301}, {"from": "C13", "title": "0.489", "to": "J20970", "value": 4.894821345806122}, {"from": "C14", "title": "0.545", "to": "J10750", "value": 5.44858992099762}, {"from": "C14", "title": "0.530", "to": "J30989", "value": 5.3042155504226685}, {"from": "C14", "title": "0.529", "to": "J30990", "value": 5.2928584814071655}, {"from": "C14", "title": "0.526", "to": "J34422", "value": 5.2603888511657715}, {"from": "C14", "title": "0.508", "to": "J24818", "value": 5.0799620151519775}, {"from": "C15", "title": "0.595", "to": "J13786", "value": 5.954039692878723}, {"from": "C15", "title": "0.566", "to": "J16152", "value": 5.656808614730835}, {"from": "C15", "title": "0.565", "to": "J30989", "value": 5.64922571182251}, {"from": "C15", "title": "0.564", "to": "J30990", "value": 5.64068078994751}, {"from": "C15", "title": "0.561", "to": "J16035", "value": 5.613973140716553}, {"from": "C16", "title": "0.654", "to": "J9454", "value": 6.5383148193359375}, {"from": "C16", "title": "0.629", "to": "J30990", "value": 6.292245984077454}, {"from": "C16", "title": "0.628", "to": "J26293", "value": 6.2770432233810425}, {"from": "C16", "title": "0.628", "to": "J26294", "value": 6.2770432233810425}, {"from": "C16", "title": "0.628", "to": "J26295", "value": 6.2770432233810425}, {"from": "C17", "title": "0.594", "to": "J21756", "value": 5.936995148658752}, {"from": "C17", "title": "0.573", "to": "J20529", "value": 5.727492570877075}, {"from": "C17", "title": "0.569", "to": "J13170", "value": 5.693559050559998}, {"from": "C17", "title": "0.569", "to": "J33214", "value": 5.69225549697876}, {"from": "C17", "title": "0.567", "to": "J18817", "value": 5.669708847999573}, {"from": "C18", "title": "0.587", "to": "J10750", "value": 5.866515636444092}, {"from": "C18", "title": "0.578", "to": "J30989", "value": 5.7807475328445435}, {"from": "C18", "title": "0.577", "to": "J30990", "value": 5.771228671073914}, {"from": "C18", "title": "0.562", "to": "J34422", "value": 5.615531802177429}, {"from": "C18", "title": "0.549", "to": "J9454", "value": 5.493091940879822}, {"from": "C19", "title": "0.626", "to": "J9454", "value": 6.2596118450164795}, {"from": "C19", "title": "0.596", "to": "J18817", "value": 5.959857702255249}, {"from": "C19", "title": "0.578", "to": "J34106", "value": 5.777912735939026}, {"from": "C19", "title": "0.574", "to": "J13170", "value": 5.7445597648620605}, {"from": "C19", "title": "0.572", "to": "J9778", "value": 5.723878741264343}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "solver": "forceAtlas2Based"}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
