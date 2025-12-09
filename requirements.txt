@@ -1,5 +1,15 @@
-streamlit==1.40.0
+streamlit==1.51.0
 pandas==2.1.4
 numpy==1.26.3
+plotly==5.18.0
+pydeck==0.9.1
+matplotlib==3.10.7
 pyvis==0.3.2
 scikit-learn==1.4.0
+scipy==1.16.3
+networkx==3.6
+sentence-transformers==2.3.1
+transformers==4.57.3
+torch==2.9.1
+python-dotenv==1.2.1
+requests==2.32.5"
