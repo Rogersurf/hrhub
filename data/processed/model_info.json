@@ -1,0 +1,9 @@
+{
+  "model_name": "all-MiniLM-L6-v2",
+  "embedding_dim": 384,
+  "n_candidates": 9544,
+  "n_companies": 24473,
+  "bilateral_fairness": 0.7187691926956177,
+  "coverage_pct": 96.13860172434929,
+  "mean_match_score": 0.573001503944397
+}
