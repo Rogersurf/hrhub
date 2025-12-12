@@ -12,12 +12,15 @@ import re
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
+from utils.styles import inject_custom_css
+from utils.viz_bilateral import render_bilateral_fairness_section
+
 from config import *
 from data.data_loader import (
     load_embeddings,
     # find_top_matches_company  # Function doesn't exist yet - using embedded version below
 )
-from utils.display import (
+from hrhub_project.utils.display_v3 import (
     display_company_profile_basic,
     display_candidate_card_basic,
     display_match_table_candidates,
@@ -25,7 +28,6 @@ from utils.display import (
 )
 from utils.visualization import create_network_graph
 from utils.viz_heatmap import render_skills_heatmap_section
-from utils.viz_bilateral import render_bilateral_fairness_section  # NEW IMPORT
 import streamlit.components.v1 as components
 import numpy as np
 
@@ -393,6 +395,9 @@ def main():
     
     # Configure page
     configure_page()
+
+    # Apply custom CSS
+    inject_custom_css()
     
     # Render header
     st.markdown('<h1 class="main-title">🏢 Company View</h1>', unsafe_allow_html=True)

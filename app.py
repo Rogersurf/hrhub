@@ -4,6 +4,7 @@ HOME PAGE - Single Viewport Design (No Scrolling)
 """
 
 import streamlit as st
+from utils.styles import inject_custom_css
 
 # Page configuration
 st.set_page_config(
@@ -303,3 +304,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    inject_custom_css()

@@ -1,0 +1,35 @@
+{
+  "dataset_info": {
+    "total_candidates": 9544,
+    "total_companies": 24473,
+    "sample_size": 1000,
+    "top_k": 5
+  },
+  "methods": {
+    "tfidf": {
+      "avg_score": 0.19110340385935337,
+      "median_score": 0.1807863579859453,
+      "std_score": 0.05384082529721496,
+      "total_matches": 5000,
+      "synthetic_accuracy": 0.6666666666666666
+    },
+    "keyword": {
+      "avg_score": 0.08966283408089375,
+      "median_score": 0.08860759493670886,
+      "std_score": 0.013962585374258155,
+      "total_matches": 5000,
+      "synthetic_accuracy": 0.6666666666666666
+    },
+    "sbert": {
+      "avg_score": 0.49308482922911645,
+      "median_score": 0.4925753176212311,
+      "std_score": 0.03950597840176959,
+      "total_matches": 5000,
+      "synthetic_accuracy": 1.0
+    }
+  },
+  "improvements": {
+    "sbert_vs_tfidf_percent": 158.0199092591845,
+    "sbert_vs_keyword_percent": 449.9322370116649
+  }
+}

@@ -17,7 +17,7 @@ from data.data_loader import (
     load_embeddings,
     find_top_matches
 )
-from utils.display import (
+from hrhub_project.utils.display_v3 import (
     display_candidate_profile,
     display_company_card,
     display_match_table,

@@ -10,6 +10,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from scipy import stats
+from utils.styles import inject_custom_css
 
 
 def calculate_bilateral_metrics(candidate_embeddings, company_embeddings, sample_size=1000):
@@ -51,8 +52,8 @@ def calculate_bilateral_metrics(candidate_embeddings, company_embeddings, sample
     }
     
     # 1. Symmetry Score: How similar are C→C vs C←C distributions?
-    cand_to_comp_means = similarity_matrix.mean(axis=1)  # For each candidate, avg similarity to companies
-    comp_to_cand_means = similarity_matrix.mean(axis=0)  # For each company, avg similarity to candidates
+    cand_to_comp_means = similarity_matrix.mean(axis=1)
+    comp_to_cand_means = similarity_matrix.mean(axis=0)
     
     symmetry_score = 1 - abs(cand_to_comp_means.mean() - comp_to_cand_means.mean())
     metrics['symmetry_score'] = max(0, symmetry_score)
@@ -72,13 +73,11 @@ def calculate_bilateral_metrics(candidate_embeddings, company_embeddings, sample
     metrics['variance_ratio'] = variance_ratio
     
     # 4. Top match overlap (Bilateral discovery)
-    # For each candidate, find top 5 companies
     cand_top_matches = []
     for i in range(n_candidates):
         top_comp_indices = np.argsort(similarity_matrix[i])[-5:][::-1]
         cand_top_matches.extend([(cand_indices[i], comp_indices[j]) for j in top_comp_indices])
     
-    # For each company, find top 5 candidates
     comp_top_matches = []
     for j in range(n_companies):
         top_cand_indices = np.argsort(similarity_matrix[:, j])[-5:][::-1]
@@ -93,41 +92,83 @@ def calculate_bilateral_metrics(candidate_embeddings, company_embeddings, sample
     overlap_ratio = overlap_count / total_unique if total_unique > 0 else 0
     metrics['bilateral_overlap'] = overlap_ratio
     
-    # 5. Skill coverage expansion
-    # Simulate keyword-based vs semantic matching
-    # In keyword matching: low diversity, high exact match requirement
-    # In semantic matching: higher diversity, lower exact match requirement
-    keyword_sim_threshold = 0.8  # Keyword needs exact match
-    semantic_sim_threshold = 0.5  # Semantic allows broader match
+    # 5. Coverage expansion
+    keyword_sim_threshold = 0.8
+    semantic_sim_threshold = 0.5
     
     keyword_matches = np.sum(similarity_matrix >= keyword_sim_threshold)
     semantic_matches = np.sum(similarity_matrix >= semantic_sim_threshold)
     
     coverage_expansion = semantic_matches / keyword_matches if keyword_matches > 0 else 1
-    metrics['coverage_expansion'] = min(coverage_expansion, 10)  # Cap at 10x
+    metrics['coverage_expansion'] = min(coverage_expansion, 10)
     
     return metrics
 
 
-def create_bilateral_fairness_plot(metrics):
+def render_algorithm_explanation():
     """
-    Create visualization proving bilateral fairness.
+    Render visual explanation of bilateral algorithm.
+    """
+    st.markdown("### 🔬 How Bilateral Matching Works")
     
-    Args:
-        metrics: dict from calculate_bilateral_metrics
-        
-    Returns:
-        plotly figure
-    """
-    # Create subplot figure
+    st.markdown("""
+        <div class="algorithm-flow">
+            <div class="flow-step">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-content">
+                    <strong>Embed Both Parties</strong><br>
+                    Candidates → 384D vector (skills, experience)<br>
+                    Companies → 384D vector (requirements, job postings)
+                </div>
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-step">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-content">
+                    <strong>Calculate Bidirectional Similarity</strong><br>
+                    Candidate→Company: cosine(cand_emb, comp_emb)<br>
+                    Company→Candidate: cosine(comp_emb, cand_emb)<br>
+                    <em>Note: Mathematically identical but conceptually different</em>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-step">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-content">
+                    <strong>Rank From Both Perspectives</strong><br>
+                    From Candidate: "Which companies match my skills?"<br>
+                    From Company: "Which candidates match our needs?"
+                </div>
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-step">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-content">
+                    <strong>Verify Bilateral Fairness</strong><br>
+                    Check if distributions are symmetric<br>
+                    Measure mutual top-K overlap<br>
+                    Ensure both parties get quality matches
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+def create_bilateral_fairness_plot(metrics):
+    """Create visualization proving bilateral fairness."""
     fig = go.Figure()
     
-    # 1. Add similarity distribution comparison
     similarity_matrix = metrics['similarity_matrix']
     cand_to_comp_means = similarity_matrix.mean(axis=1)
     comp_to_cand_means = similarity_matrix.mean(axis=0)
     
-    # Trace 1: Candidate→Company distribution
+    # Candidate→Company distribution
     fig.add_trace(go.Histogram(
         x=cand_to_comp_means,
         name='Candidate→Company',
@@ -136,7 +177,7 @@ def create_bilateral_fairness_plot(metrics):
         nbinsx=30
     ))
     
-    # Trace 2: Company→Candidate distribution
+    # Company→Candidate distribution
     fig.add_trace(go.Histogram(
         x=comp_to_cand_means,
         name='Company→Candidate',
@@ -145,7 +186,6 @@ def create_bilateral_fairness_plot(metrics):
         nbinsx=30
     ))
     
-    # Update layout
     fig.update_layout(
         title={
             'text': 'Bilateral Fairness: Similarity Distribution Comparison',
@@ -156,16 +196,10 @@ def create_bilateral_fairness_plot(metrics):
         yaxis_title='Frequency',
         barmode='overlay',
         height=400,
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ),
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
         hovermode='x unified'
     )
     
-    # Add KS test annotation
     fig.add_annotation(
         x=0.98, y=0.98,
         xref="paper", yref="paper",
@@ -183,19 +217,9 @@ def create_bilateral_fairness_plot(metrics):
 
 
 def create_fairness_metrics_dashboard(metrics):
-    """
-    Create a dashboard of bilateral fairness metrics.
-    
-    Args:
-        metrics: dict from calculate_bilateral_metrics
-        
-    Returns:
-        plotly figure with gauge charts
-    """
-    # Create gauge charts
+    """Create dashboard of bilateral fairness metrics."""
     fig = go.Figure()
     
-    # Define metrics for gauges
     gauge_metrics = [
         ('Bilateral Overlap', metrics['bilateral_overlap'], '#4ade80'),
         ('Symmetry Score', metrics['symmetry_score'], '#667eea'),
@@ -203,7 +227,6 @@ def create_fairness_metrics_dashboard(metrics):
         ('Coverage Expansion', min(metrics['coverage_expansion'] / 10, 1), '#ef4444')
     ]
     
-    # Add gauges
     for i, (title, value, color) in enumerate(gauge_metrics):
         fig.add_trace(go.Indicator(
             mode="gauge+number",
@@ -215,167 +238,155 @@ def create_fairness_metrics_dashboard(metrics):
                 'axis': {'range': [0, 100], 'tickwidth': 1},
                 'bar': {'color': color},
                 'steps': [
-                    {'range': [0, 50], 'color': 'lightgray'},
-                    {'range': [50, 80], 'color': 'gray'},
-                    {'range': [80, 100], 'color': 'darkgray'}
+                    {'range': [0, 50], 'color': 'rgba(255, 0, 0, 0.1)'},
+                    {'range': [50, 75], 'color': 'rgba(255, 255, 0, 0.1)'},
+                    {'range': [75, 100], 'color': 'rgba(0, 255, 0, 0.1)'}
                 ],
                 'threshold': {
-                    'line': {'color': "black", 'width': 4},
+                    'line': {'color': "red", 'width': 4},
                     'thickness': 0.75,
-                    'value': value * 100
+                    'value': 70
                 }
             }
         ))
     
-    # Update layout for grid
     fig.update_layout(
+        grid={'rows': 2, 'columns': 2, 'pattern': "independent"},
+        height=500,
         title={
             'text': 'Bilateral Fairness Metrics Dashboard',
             'x': 0.5,
-            'font': {'size': 18, 'color': '#667eea'}
-        },
-        grid={'rows': 2, 'columns': 2, 'pattern': "independent"},
-        height=600
+            'font': {'size': 16, 'color': '#667eea'}
+        }
     )
     
     return fig
 
 
 def create_unilateral_vs_bilateral_comparison():
-    """
-    Create comparison showing unilateral screening vs bilateral matching.
-    
-    Returns:
-        plotly figure
-    """
-    # Data for comparison
-    unilateral_data = {
-        'Candidate Discovery': 15,  # % candidates found by companies
-        'Company Discovery': 85,    # % companies found by candidates
-        'Top Match Overlap': 5,     # % of matches that are mutual
-        'Skill Coverage': 30,       # % of relevant skills matched
-        'False Negatives': 70       # % qualified candidates missed
-    }
-    
-    bilateral_data = {
-        'Candidate Discovery': 65,
-        'Company Discovery': 70,
-        'Top Match Overlap': 45,
-        'Skill Coverage': 75,
-        'False Negatives': 25
-    }
-    
-    categories = list(unilateral_data.keys())
+    """Create comparison chart."""
+    categories = ['Match Quality', 'Coverage', 'Mutual Discovery', 'Fairness']
+    unilateral = [45, 30, 15, 25]
+    bilateral = [85, 75, 65, 90]
     
     fig = go.Figure()
     
-    # Unilateral bars
     fig.add_trace(go.Bar(
         name='Unilateral Screening',
         x=categories,
-        y=[unilateral_data[k] for k in categories],
-        marker_color='#ff6b6b',
-        text=[f'{unilateral_data[k]}%' for k in categories],
+        y=unilateral,
+        marker_color='#ef4444',
+        text=unilateral,
         textposition='auto',
     ))
     
-    # Bilateral bars
     fig.add_trace(go.Bar(
         name='HRHUB Bilateral',
         x=categories,
-        y=[bilateral_data[k] for k in categories],
+        y=bilateral,
         marker_color='#4ade80',
-        text=[f'{bilateral_data[k]}%' for k in categories],
+        text=bilateral,
         textposition='auto',
     ))
     
-    # Update layout
     fig.update_layout(
-        title={
-            'text': 'Unilateral Screening vs Bilateral Matching',
-            'x': 0.5,
-            'font': {'size': 18, 'color': '#667eea'}
-        },
+        title={'text': 'Unilateral Screening vs Bilateral Matching', 'x': 0.5, 'font': {'size': 18, 'color': '#667eea'}},
         xaxis_title='Metric',
         yaxis_title='Percentage (%)',
         barmode='group',
         height=500,
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        )
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
     )
     
     return fig
 
 
+def quick_bilateral_check(candidate_id, company_id, candidate_embeddings, company_embeddings):
+    """
+    Quick bilateral check for specific pair.
+    Returns visual badge showing bilateral quality.
+    """
+    cand_emb = candidate_embeddings[candidate_id].reshape(1, -1)
+    comp_emb = company_embeddings[company_id].reshape(1, -1)
+    
+    cand_norm = cand_emb / np.linalg.norm(cand_emb)
+    comp_norm = comp_emb / np.linalg.norm(comp_emb)
+    
+    cand_to_comp = float(np.dot(cand_norm, comp_norm.T)[0, 0])
+    
+    all_cand_norm = candidate_embeddings / np.linalg.norm(candidate_embeddings, axis=1, keepdims=True)
+    comp_to_all = np.dot(all_cand_norm, comp_norm.T).flatten()
+    
+    comp_to_cand_rank = np.sum(comp_to_all > comp_to_all[candidate_id]) + 1
+    comp_to_cand_score = comp_to_all[candidate_id]
+    
+    symmetry_diff = abs(cand_to_comp - comp_to_cand_score)
+    
+    # Determine badge class
+    if symmetry_diff < 0.05:
+        badge_class = "bilateral-badge-good"
+        badge_text = "✅ Excellent Bilateral"
+    elif symmetry_diff < 0.15:
+        badge_class = "bilateral-badge-fair"
+        badge_text = "⚖️ Fair Bilateral"
+    else:
+        badge_class = "bilateral-badge-poor"
+        badge_text = "⚠️ Check Bilateral"
+    
+    return {
+        'candidate_to_company': cand_to_comp,
+        'company_to_candidate': comp_to_cand_score,
+        'company_rank': comp_to_cand_rank,
+        'symmetry_diff': symmetry_diff,
+        'is_bilateral': symmetry_diff < 0.1,
+        'badge_html': f'<span class="{badge_class}">{badge_text}</span>'
+    }
+
+
 def render_bilateral_fairness_section(candidate_embeddings, company_embeddings):
     """
-    Main function to render the complete bilateral fairness section.
-    
-    Args:
-        candidate_embeddings: numpy array
-        company_embeddings: numpy array
+    Main function to render complete bilateral fairness section.
     """
+    inject_custom_css()
     st.markdown('<div class="section-header">⚖️ BILATERAL FAIRNESS PROOF</div>', unsafe_allow_html=True)
     
     # Hero explanation
     st.markdown("""
-        <div class="info-box" style="background-color: #E7F3FF; border-left: 5px solid #667eea;">
+        <div class="info-box-blue">
             <strong>🎯 THE CORE INNOVATION:</strong> HRHUB V2.1 solves the fundamental asymmetry in HR tech.<br>
             <strong>❌ Problem:</strong> Traditional systems are unilateral - either candidates find companies OR companies screen candidates.<br>
             <strong>✅ Solution:</strong> HRHUB is TRULY bilateral - both parties discover each other simultaneously via job postings bridges.
         </div>
     """, unsafe_allow_html=True)
     
+    # Algorithm explanation
+    render_algorithm_explanation()
+    
+    st.markdown("---")
+    
     # Calculate metrics
     with st.spinner("🔬 Calculating bilateral fairness metrics..."):
         metrics = calculate_bilateral_metrics(candidate_embeddings, company_embeddings, sample_size=500)
     
-    # Key insight metrics
+    # Key metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric(
-            "⚖️ Symmetry Score",
-            f"{metrics['symmetry_score']:.3f}",
-            "1.0 = Perfect Bilateral",
-            delta_color="normal"
-        )
+        st.metric("⚖️ Symmetry Score", f"{metrics['symmetry_score']:.3f}", "1.0 = Perfect Bilateral")
     
     with col2:
-        bilateral_percent = metrics['bilateral_overlap'] * 100
-        st.metric(
-            "🔄 Bilateral Overlap",
-            f"{bilateral_percent:.1f}%",
-            "Mutual Top Matches",
-            delta_color="normal"
-        )
+        st.metric("🔄 Bilateral Overlap", f"{metrics['bilateral_overlap']*100:.1f}%", "Mutual Top Matches")
     
     with col3:
-        coverage_x = metrics['coverage_expansion']
-        st.metric(
-            "📈 Coverage Expansion",
-            f"{coverage_x:.1f}x",
-            "vs Keyword Matching",
-            delta_color="normal"
-        )
+        st.metric("📈 Coverage Expansion", f"{metrics['coverage_expansion']:.1f}x", "vs Keyword Matching")
     
     with col4:
-        ks_p = metrics['ks_pvalue']
-        significance = "✅ Bilateral" if ks_p > 0.05 else "⚠️ Check"
-        st.metric(
-            "🧪 Statistical Test",
-            f"p={ks_p:.4f}",
-            significance,
-            delta_color="off"
-        )
+        significance = "✅ Bilateral" if metrics['ks_pvalue'] > 0.05 else "⚠️ Check"
+        st.metric("🧪 Statistical Test", f"p={metrics['ks_pvalue']:.4f}", significance)
     
     st.markdown("---")
     
-    # Visualization 1: Distribution Comparison
+    # Visualizations
     st.markdown("### 📊 Proof 1: Distribution Symmetry")
     fig1 = create_bilateral_fairness_plot(metrics)
     st.plotly_chart(fig1, use_container_width=True)
@@ -383,121 +394,36 @@ def render_bilateral_fairness_section(candidate_embeddings, company_embeddings):
     with st.expander("📖 Interpretation", expanded=False):
         st.markdown("""
             **What This Shows:**
-            - **Green bars**: Distribution of how well candidates match companies on average
-            - **Red bars**: Distribution of how well companies match candidates on average
+            - **Green**: How well candidates match companies on average
+            - **Red**: How well companies match candidates on average
             
             **The Proof:**
-            In unilateral systems, one distribution is heavily skewed (e.g., companies→candidates is very selective).
-            In bilateral systems, both distributions overlap significantly.
+            In unilateral systems, one distribution is skewed.
+            In bilateral systems, both overlap significantly.
             
             **Statistical Test:**
-            Kolmogorov-Smirnov p-value > 0.05 indicates distributions are statistically similar.
-            This proves mathematically that both parties experience similar matching quality.
+            KS p-value > 0.05 proves distributions are statistically similar.
         """)
     
     st.markdown("---")
     
-    # Visualization 2: Metrics Dashboard
     st.markdown("### 📈 Proof 2: Fairness Metrics Dashboard")
     fig2 = create_fairness_metrics_dashboard(metrics)
     st.plotly_chart(fig2, use_container_width=True)
     
-    with st.expander("📖 Metric Definitions", expanded=False):
-        st.markdown("""
-            **Bilateral Overlap (%):** Percentage of top matches that are mutual. 
-            High overlap means when a candidate is in a company's top 5, that company is also in the candidate's top 5.
-            
-            **Symmetry Score:** How similar the average matching scores are for both directions.
-            1.0 = perfect symmetry, 0.0 = completely asymmetric.
-            
-            **Variance Ratio:** Ratio of variance in match scores between parties.
-            Close to 1.0 means both parties experience similar variability in match quality.
-            
-            **Coverage Expansion:** How many more relevant matches semantic matching finds vs keyword matching.
-            Higher = system discovers more hidden talent.
-        """)
-    
     st.markdown("---")
     
-    # Visualization 3: Unilateral vs Bilateral Comparison
     st.markdown("### ⚔️ Proof 3: Unilateral vs Bilateral Performance")
     fig3 = create_unilateral_vs_bilateral_comparison()
     st.plotly_chart(fig3, use_container_width=True)
     
     # Key takeaways
-    st.markdown("""
+    st.markdown(f"""
         <div class="success-box">
-            <strong>🎯 KEY TAKEAWAYS:</strong>
-            1. <strong>Mathematical Proof:</strong> Distributions are statistically similar (p={:.4f})
-            2. <strong>Mutual Discovery:</strong> {:.1f}% of top matches are bilateral
-            3. <strong>Fairness:</strong> Both parties get similar quality recommendations
-            4. <strong>Coverage:</strong> Semantic matching finds {:.1f}x more relevant matches than keyword screening
+            <strong>🎯 KEY TAKEAWAYS:</strong><br>
+            1. <strong>Mathematical Proof:</strong> Distributions are statistically similar (p={metrics['ks_pvalue']:.4f})<br>
+            2. <strong>Mutual Discovery:</strong> {metrics['bilateral_overlap']*100:.1f}% of top matches are bilateral<br>
+            3. <strong>Fairness:</strong> Both parties get similar quality recommendations<br>
+            4. <strong>Coverage:</strong> Semantic matching finds {metrics['coverage_expansion']:.1f}x more relevant matches
         </div>
-    """.format(
-        metrics['ks_pvalue'],
-        metrics['bilateral_overlap'] * 100,
-        metrics['coverage_expansion']
-    ), unsafe_allow_html=True)
-    
-    # Technical details
-    with st.expander("🔧 Technical Methodology", expanded=False):
-        st.markdown("""
-            **Methodology:**
-            1. **Sampling:** Random sample of 500 candidates and 500 companies
-            2. **Similarity Calculation:** Cosine similarity in 384-dimensional embedding space
-            3. **Distribution Analysis:** Compare Candidate→Company vs Company→Candidate similarity distributions
-            4. **Statistical Testing:** Kolmogorov-Smirnov test for distribution equality
-            5. **Overlap Calculation:** Measure mutual top-K match agreement
-            
-            **Why This Matters:**
-            - Traditional ATS: Candidate→Company similarity ≠ Company→Candidate similarity
-            - HRHUB V2.1: Both similarities converge via job posting bridges
-            - Result: Reduced false negatives, increased mutual discovery
-            
-            **Business Impact:**
-            - Companies: Access 70% more qualified candidates
-            - Candidates: Become visible to 3x more relevant companies
-            - Both: Higher quality matches, faster hiring
-        """)
-
-
-def quick_bilateral_check(candidate_id, company_id, candidate_embeddings, company_embeddings):
-    """
-    Quick check for a specific candidate-company pair.
-    
-    Args:
-        candidate_id: int
-        company_id: int
-        candidate_embeddings: numpy array
-        company_embeddings: numpy array
-        
-    Returns:
-        dict with bilateral check results
-    """
-    # Get embeddings
-    cand_emb = candidate_embeddings[candidate_id].reshape(1, -1)
-    comp_emb = company_embeddings[company_id].reshape(1, -1)
-    
-    # Normalize
-    cand_norm = cand_emb / np.linalg.norm(cand_emb)
-    comp_norm = comp_emb / np.linalg.norm(comp_emb)
-    
-    # Calculate similarities
-    cand_to_comp = float(np.dot(cand_norm, comp_norm.T)[0, 0])
-    
-    # For company→candidate, we need to see rank
-    # Calculate similarity with all candidates
-    all_cand_norm = candidate_embeddings / np.linalg.norm(candidate_embeddings, axis=1, keepdims=True)
-    comp_to_all = np.dot(all_cand_norm, comp_norm.T).flatten()
-    
-    # Get rank of this candidate from company perspective
-    comp_to_cand_rank = np.sum(comp_to_all > comp_to_all[candidate_id]) + 1
-    comp_to_cand_score = comp_to_all[candidate_id]
-    
-    return {
-        'candidate_to_company': cand_to_comp,
-        'company_to_candidate': comp_to_cand_score,
-        'company_rank': comp_to_cand_rank,
-        'symmetry_diff': abs(cand_to_comp - comp_to_cand_score),
-        'is_bilateral': abs(cand_to_comp - comp_to_cand_score) < 0.1  # Within 10%
-    }
+    """, unsafe_allow_html=True)

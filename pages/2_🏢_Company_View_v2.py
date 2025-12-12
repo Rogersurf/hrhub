@@ -17,7 +17,7 @@ from data.data_loader import (
     load_embeddings,
     # find_top_matches_company  # Function doesn't exist yet - using embedded version below
 )
-from utils.display import (
+from hrhub_project.utils.display_v3 import (
     display_company_profile_basic,
     display_candidate_card_basic,
     display_match_table_candidates,
