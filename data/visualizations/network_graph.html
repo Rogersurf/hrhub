@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#00FF00", "font": {"color": "white"}, "id": "C0", "label": "Candidate 1", "shape": "dot", "size": 30, "title": "Big data analytics working and database warehouse "}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C1", "label": "Candidate 2", "shape": "dot", "size": 30, "title": "Fresher looking to join as a data analyst and juni"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C2", "label": "Candidate 3", "shape": "dot", "size": 30, "title": "nan"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C3", "label": "Candidate 4", "shape": "dot", "size": 30, "title": "To obtain a position in a fast-paced business offi"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C4", "label": "Candidate 5", "shape": "dot", "size": 30, "title": "Professional accountant with an outstanding work e"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C5", "label": "Candidate 6", "shape": "dot", "size": 30, "title": "To secure an IT specialist, desktop support, netwo"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C6", "label": "Candidate 7", "shape": "dot", "size": 30, "title": "nan"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C7", "label": "Candidate 8", "shape": "dot", "size": 30, "title": "nan"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C8", "label": "Candidate 9", "shape": "dot", "size": 30, "title": "Certified Data analyst with a degree in Electronic"}, {"color": "#00FF00", "font": {"color": "white"}, "id": "C9", "label": "Candidate 10", "shape": "dot", "size": 30, "title": "nan"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M20497", "label": "Company 20497", "shape": "dot", "size": 20, "title": "CloudIngest is a full-service tech software firm. "}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M19209", "label": "Company 19209", "shape": "dot", "size": 20, "title": "Our team has diverse group of experienced and tale"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M8494", "label": "Company 8494", "shape": "dot", "size": 20, "title": "Princeton IT Services, Inc. has been trusted for m"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M4917", "label": "Company 4917", "shape": "dot", "size": 20, "title": "Since 1980 ANALYTIC has been a leader in staffing "}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M21391", "label": "Company 21391", "shape": "dot", "size": 20, "title": "Atek IT - A Leading Edge for Software Development "}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M21571", "label": "Company 21571", "shape": "dot", "size": 20, "title": "Professional Technical Team that specializes in th"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M18062", "label": "Company 18062", "shape": "dot", "size": 20, "title": "Technical Recruiting\\Staffing and IT Services. Spe"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M20282", "label": "Company 20282", "shape": "dot", "size": 20, "title": "Whether it\u0027s tax strategy, tax preparation, accoun"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M8398", "label": "Company 8398", "shape": "dot", "size": 20, "title": "Bespoke Careers are a specialist recruitment agenc"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M20992", "label": "Company 20992", "shape": "dot", "size": 20, "title": "CMB Staffing Solutions is a boutique staffing firm"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M21043", "label": "Company 21043", "shape": "dot", "size": 20, "title": "At The Accounting Lab, we are dedicated to helping"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M22986", "label": "Company 22986", "shape": "dot", "size": 20, "title": "Audit Friendly helps business decision makers find"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M19823", "label": "Company 19823", "shape": "dot", "size": 20, "title": "Topa Group connects talent with electronic integra"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M22408", "label": "Company 22408", "shape": "dot", "size": 20, "title": "We\u0027ve worked in manufacturing and automation for o"}, {"color": "#FF6B6B", "font": {"color": "white"}, "id": "M11090", "label": "Company 11090", "shape": "dot", "size": 20, "title": "Tiger Analytics is a global leader in AI and Analy"}]);
+                  edges = new vis.DataSet([{"from": "C0", "title": "Score: 0.659", "to": "M20497", "value": 3.2968950271606445}, {"from": "C0", "title": "Score: 0.645", "to": "M19209", "value": 3.2272717356681824}, {"from": "C0", "title": "Score: 0.644", "to": "M8494", "value": 3.221314549446106}, {"from": "C1", "title": "Score: 0.608", "to": "M4917", "value": 3.0422180891036987}, {"from": "C1", "title": "Score: 0.586", "to": "M21391", "value": 2.928350269794464}, {"from": "C1", "title": "Score: 0.569", "to": "M21571", "value": 2.8474313020706177}, {"from": "C2", "title": "Score: 0.584", "to": "M21391", "value": 2.919776439666748}, {"from": "C2", "title": "Score: 0.576", "to": "M18062", "value": 2.882373034954071}, {"from": "C2", "title": "Score: 0.563", "to": "M21571", "value": 2.815447747707367}, {"from": "C3", "title": "Score: 0.584", "to": "M20282", "value": 2.918837070465088}, {"from": "C3", "title": "Score: 0.570", "to": "M8398", "value": 2.8487539291381836}, {"from": "C3", "title": "Score: 0.568", "to": "M20992", "value": 2.842118740081787}, {"from": "C4", "title": "Score: 0.615", "to": "M20282", "value": 3.0740156769752502}, {"from": "C4", "title": "Score: 0.555", "to": "M21043", "value": 2.7753475308418274}, {"from": "C4", "title": "Score: 0.552", "to": "M22986", "value": 2.76020884513855}, {"from": "C5", "title": "Score: 0.651", "to": "M21571", "value": 3.2567912340164185}, {"from": "C5", "title": "Score: 0.639", "to": "M18062", "value": 3.1946346163749695}, {"from": "C5", "title": "Score: 0.636", "to": "M21391", "value": 3.1818440556526184}, {"from": "C6", "title": "Score: 0.514", "to": "M18062", "value": 2.572348713874817}, {"from": "C6", "title": "Score: 0.513", "to": "M4917", "value": 2.567267417907715}, {"from": "C6", "title": "Score: 0.512", "to": "M21571", "value": 2.5583434104919434}, {"from": "C7", "title": "Score: 0.577", "to": "M21571", "value": 2.884741425514221}, {"from": "C7", "title": "Score: 0.549", "to": "M19823", "value": 2.747284173965454}, {"from": "C7", "title": "Score: 0.544", "to": "M22408", "value": 2.719295024871826}, {"from": "C8", "title": "Score: 0.519", "to": "M21571", "value": 2.59687602519989}, {"from": "C8", "title": "Score: 0.513", "to": "M21391", "value": 2.563944160938263}, {"from": "C8", "title": "Score: 0.492", "to": "M11090", "value": 2.462400496006012}, {"from": "C9", "title": "Score: 0.587", "to": "M21391", "value": 2.935572862625122}, {"from": "C9", "title": "Score: 0.582", "to": "M21571", "value": 2.9076170921325684}, {"from": "C9", "title": "Score: 0.572", "to": "M18062", "value": 2.8603285551071167}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"gravitationalConstant": -50, "centralGravity": 0.01, "springLength": 200, "springConstant": 0.08}, "maxVelocity": 50, "solver": "forceAtlas2Based", "timestep": 0.35, "stabilization": {"iterations": 150}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "bilateral_fairness": {
+    "fairness_score": 0.014955256813631348,
+    "candidate_coverage": 0.9911986588432523,
+    "company_coverage": 0.014955256813631348,
+    "threshold": 0.5,
+    "top_k": 10
+  },
+  "match_quality": {
+    "mean_score": 0.5360431638077113,
+    "median_score": 0.5344848036766052,
+    "std_score": 0.039904973192227904,
+    "min_score": 0.40903615951538086,
+    "max_score": 0.685663104057312,
+    "percentiles": {
+      "p10": 0.4859841763973236,
+      "p25": 0.5087190866470337,
+      "p50": 0.5344848036766052,
+      "p75": 0.5624781847000122,
+      "p90": 0.5889751315116882,
+      "p95": 0.6044830679893494,
+      "p99": 0.6361393928527832
+    },
+    "quality_distribution": {
+      "excellent": 0,
+      "very_good": 0,
+      "good": 5920,
+      "moderate": 71836,
+      "poor": 17684
+    }
+  },
+  "enrichment": {
+    "total_companies": 24473,
+    "companies_with_skills": 23528,
+    "coverage_pct": 96.13860172434929,
+    "avg_score_enriched": 0.536115567461384,
+    "avg_score_non_enriched": 0.5206910033843347
+  },
+  "performance": {
+    "query_time_ms": 2.1053314208984375,
+    "memory_mb": 940.8296203613281,
+    "n_candidates": 9544,
+    "n_companies": 24473,
+    "total_matches": 95440
+  },
+  "model_info": {
+    "embedding_model": "all-MiniLM-L6-v2",
+    "embedding_dimension": 384,
+    "similarity_metric": "cosine"
+  }
+}

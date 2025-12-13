@@ -1,0 +1,14 @@
+{
+  "method": "SBERT",
+  "samples_validated": 20,
+  "mean_human_rating": 3.15,
+  "mean_system_score": 0.6193415522575378,
+  "correlation": -0.0813108830374582,
+  "ratings_distribution": {
+    "5": 5,
+    "3": 5,
+    "2": 4,
+    "4": 3,
+    "1": 3
+  }
+}

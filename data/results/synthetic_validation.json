@@ -1,0 +1,25 @@
+{
+  "test_cases": 5,
+  "methods_tested": [
+    "SBERT",
+    "TF-IDF",
+    "Jaccard"
+  ],
+  "results": {
+    "SBERT": {
+      "accuracy": 1.0,
+      "correct": 5,
+      "total": 5
+    },
+    "TF-IDF": {
+      "accuracy": 1.0,
+      "correct": 5,
+      "total": 5
+    },
+    "Jaccard": {
+      "accuracy": 1.0,
+      "correct": 5,
+      "total": 5
+    }
+  }
+}
