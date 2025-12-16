@@ -1,29 +1,32 @@
 #!/bin/bash
-
-# HRHUB Quick Start Script
-
 echo "🚀 Starting HRHUB..."
 echo ""
 
-# Check if virtual environment exists
+# Try Python 3.10, then 3.11, then default
+if command -v python3.10 &> /dev/null; then
+    PYTHON_CMD="python3.10"
+    echo "✅ Python 3.10 found (Hugging Face compatible)"
+elif command -v python3.11 &> /dev/null; then
+    PYTHON_CMD="python3.11"
+    echo "⚠️  Python 3.11 found (almost compatible)"
+else
+    PYTHON_CMD="python3"
+    echo "⚠️  Using default Python: $($PYTHON_CMD --version)"
+fi
+
 if [ ! -d "venv" ]; then
-    echo "📦 Creating virtual environment..."
-    python3 -m venv venv
+    echo "📦 Creating virtual environment with $PYTHON_CMD..."
+    $PYTHON_CMD -m venv venv
     echo "✅ Virtual environment created"
 fi
 
-# Activate virtual environment
 echo "🔌 Activating virtual environment..."
 source venv/bin/activate
 
-# Install dependencies
 echo "📥 Installing dependencies..."
-pip install -q -r requirements.txt
+pip install -r requirements.txt
 echo "✅ Dependencies installed"
 
 echo ""
-echo "🎉 Launching Streamlit app..."
-echo "📍 Open your browser to: http://localhost:8501"
-echo ""
-
+echo "🎉 Launching Streamlit..."
 streamlit run app.py

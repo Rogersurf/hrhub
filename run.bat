@@ -1,29 +1,19 @@
 @echo off
 
-REM HRHUB Quick Start Script for Windows
-
 echo 🚀 Starting HRHUB...
 echo.
 
-REM Check if virtual environment exists
-if not exist "venv" (
-    echo 📦 Creating virtual environment...
+REM Use Python Launcher if available, otherwise regular python
+where py >nul 2>&1
+if %errorlevel% equ 0 (
+    py -3.10 -m venv venv 2>nul || py -3 -m venv venv 2>nul || python -m venv venv
+) else (
     python -m venv venv
-    echo ✅ Virtual environment created
 )
 
-REM Activate virtual environment
-echo 🔌 Activating virtual environment...
 call venv\Scripts\activate.bat
-
-REM Install dependencies
-echo 📥 Installing dependencies...
-pip install -q -r requirements.txt
-echo ✅ Dependencies installed
+pip install -r requirements.txt
 
 echo.
-echo 🎉 Launching Streamlit app...
-echo 📍 Open your browser to: http://localhost:8501
-echo.
-
+echo 🎉 Launching Streamlit...
 streamlit run app.py
