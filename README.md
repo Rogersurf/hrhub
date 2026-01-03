@@ -252,10 +252,10 @@ streamlit run app.py
 
 **Master's in Business Data Science - Aalborg University**
 
-- Roger - Project Lead & Deployment
-- Eskil - [Role]
-- [Team Member 3] - [Role]
-- [Team Member 4] - [Role]
+- Roger Braun - Project Lead & Deployment
+- Asalun Hye Arnob
+- Muhammad Ibrahim
+- Suchanya Baiyam
 
 ---
 
