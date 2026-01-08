@@ -1,10 +1,48 @@
+############################
+# Environments / Python
+############################
 venv/
 .venv/
 __pycache__/
 *.pyc
 *.pyo
+.bfg-report/
+
+############################
+# OS / Editor
+############################
 .DS_Store
 *.log
-.streamlit/
-*.csv
+
+############################
+# Secrets / Local config
+############################
 .env
+.streamlit/
+
+############################
+# RAW DATA (ETL ORIGIN)
+############################
+data/csv_files/
+
+############################
+# NOTEBOOK JUNK
+############################
+.ipynb_checkpoints/
+
+############################
+# NOTEBOOK INTERNAL LIBS (LEGACY)
+############################
+data/notebooks/lib/
+data/notebooks/processed_data/
+
+############################
+# LEGACY / NON-RUNTIME DATA
+############################
+data/processed/
+data/final/
+
+############################
+# TEMP / EXPERIMENTAL OUTPUTS
+############################
+data/results/network_temp.html
