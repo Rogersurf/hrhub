@@ -160,5 +160,4 @@ def inject_custom_css():
         /* Hide Streamlit branding */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
-        </style>
-    """, unsafe_allow_html=True)
+        </style>""", unsafe_allow_html=True)
