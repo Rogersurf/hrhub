@@ -8,6 +8,10 @@ __pycache__/
 *.pyo
 .bfg-report/
 
+# Large artifacts – NEVER push to HF
+data/v3/processed/*.npy
+data/v3/processed/*.pkl
+
 ############################
 # OS / Editor
 ############################
@@ -47,5 +51,4 @@ data/final/
 ############################
 data/results/network_temp.html
 
-data/v3/processed/
-data/v3/processed/
+
