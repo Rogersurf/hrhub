@@ -3,35 +3,47 @@ import numpy as np
 import pickle
 import streamlit as st
 
+
 @st.cache_resource(show_spinner=False)
 def load_production_artifacts():
+    base = "processed"
+
     cand_emb_path = hf_hub_download(
         repo_id="Rogersurf/hrhub-artifacts",
-        filename="candidate_embeddings.npy",
+        filename=f"{base}/candidate_embeddings.npy",
         repo_type="dataset"
     )
 
     comp_emb_path = hf_hub_download(
         repo_id="Rogersurf/hrhub-artifacts",
-        filename="company_embeddings.npy",
+        filename=f"{base}/company_embeddings.npy",
         repo_type="dataset"
     )
 
     cand_meta_path = hf_hub_download(
         repo_id="Rogersurf/hrhub-artifacts",
-        filename="candidates_metadata.pkl",
+        filename=f"{base}/candidates_metadata.pkl",
         repo_type="dataset"
     )
 
     comp_meta_path = hf_hub_download(
         repo_id="Rogersurf/hrhub-artifacts",
-        filename="companies_metadata.pkl",
+        filename=f"{base}/companies_metadata.pkl",
         repo_type="dataset"
     )
 
+    candidate_embeddings = np.load(cand_emb_path)
+    company_embeddings = np.load(comp_emb_path)
+
+    with open(cand_meta_path, "rb") as f:
+        candidates_meta = pickle.load(f)
+
+    with open(comp_meta_path, "rb") as f:
+        companies_meta = pickle.load(f)
+
     return (
-        np.load(cand_emb_path),
-        np.load(comp_emb_path),
-        pickle.load(open(cand_meta_path, "rb")),
-        pickle.load(open(comp_meta_path, "rb")),
+        candidate_embeddings,
+        company_embeddings,
+        candidates_meta,
+        companies_meta,
     )
