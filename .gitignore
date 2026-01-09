@@ -11,6 +11,14 @@ __pycache__/
 # Large artifacts – NEVER push to HF
 data/v3/processed/*.npy
 data/v3/processed/*.pkl
+# HF forbidden binaries
+*.npy
+*.pkl
+*.png
+data/results/
+data/v3/results/
+data/v3/processed/
+data/evaluation/
 
 ############################
 # OS / Editor
