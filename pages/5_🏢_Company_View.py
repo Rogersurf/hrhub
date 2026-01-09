@@ -45,7 +45,6 @@ def compute_bilateral_fairness(
     comp_mean = float(np.mean(comp_scores))
 
     fairness = min(cand_mean, comp_mean) / max(cand_mean, comp_mean)
-
     return cand_mean, comp_mean, fairness
 
 
@@ -59,12 +58,12 @@ def cached_fairness(candidate_embeddings, company_embeddings, top_k):
     )
 
 # =========================================================
-# COMPUTES SCORE DISTRIBUTION
+# SCORE DISTRIBUTION
 # =========================================================
 @st.cache_data(show_spinner=False)
 def compute_score_distribution(
-    company_embeddings,
     candidate_embeddings,
+    company_embeddings,
     sample_size=200
 ):
     n = min(sample_size, len(company_embeddings))
@@ -80,9 +79,9 @@ def compute_score_distribution(
     return np.array(scores)
 
 # =========================================================
-# BUILD NETWORK GRAPH
+# NETWORK GRAPH
 # =========================================================
-@st.cache_data(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def build_network_graph(
     company_embeddings,
     candidate_embeddings,
@@ -102,7 +101,7 @@ def build_network_graph(
 
     n_comp = min(sample_size, len(company_embeddings))
 
-    # Add company nodes
+    # Company nodes
     for i in range(n_comp):
         label = companies_meta.iloc[i].get("name", f"Company {i}")
         net.add_node(
@@ -113,7 +112,7 @@ def build_network_graph(
             size=18
         )
 
-    # Add candidate nodes + edges
+    # Candidate nodes + edges
     for i in range(n_comp):
         sims = cosine_similarity(
             company_embeddings[i].reshape(1, -1),
@@ -141,7 +140,7 @@ def build_network_graph(
     return net
 
 # =========================================================
-# LLM-BASED MATCH EXPLANATION
+# LLM EXPLANATION
 # =========================================================
 def explain_match_llm(company_row, candidate_row, score):
     HF_TOKEN = os.getenv("HF_TOKEN")
@@ -223,7 +222,7 @@ CAND_META_PATH = os.path.join(DATA_PATH, "candidates_metadata.pkl")
 COMP_META_PATH = os.path.join(DATA_PATH, "companies_metadata.pkl")
 
 # =========================================================
-# LOAD CORE DATA
+# LOAD DATA
 # =========================================================
 @st.cache_resource
 def load_core():
@@ -298,7 +297,7 @@ for rank, (idx, score) in enumerate(zip(top_idx, top_scores), start=1):
 df = pd.DataFrame(rows)
 
 # =========================================================
-# MATCH METRICS + TABLE
+# MATCH METRICS
 # =========================================================
 with right:
     st.subheader("📊 Match Overview")
@@ -311,9 +310,7 @@ with right:
     st.subheader("👤 Top Candidate Matches")
 
     def style_score(val):
-        if val > threshold:
-            return "color: green; font-weight: bold;"
-        return ""
+        return "color: green; font-weight: bold;" if val > threshold else ""
 
     st.dataframe(
         df.style.applymap(style_score, subset=["Score"]),
@@ -321,7 +318,7 @@ with right:
     )
 
 # =========================================================
-# FAIRNESS PANEL
+# FAIRNESS
 # =========================================================
 st.markdown("---")
 st.subheader("⚖️ Bilateral Fairness (Top-K)")
@@ -344,8 +341,8 @@ st.markdown("---")
 st.subheader("📈 Score Distribution")
 
 score_dist = compute_score_distribution(
-    company_embeddings,
-    candidate_embeddings
+    candidate_embeddings,
+    company_embeddings
 )
 
 st.bar_chart(pd.Series(score_dist).value_counts(bins=30).sort_index())
@@ -364,13 +361,14 @@ net = build_network_graph(
 )
 
 html_path = os.path.join(BASE_PATH, "data", "v3", "results", "network_company.html")
+os.makedirs(os.path.dirname(html_path), exist_ok=True)
 net.write_html(html_path)
 
 import streamlit.components.v1 as components
 components.html(open(html_path).read(), height=620, scrolling=True)
 
 # =========================================================
-# LLM EXPLAINABILITY
+# LLM EXPLANATION
 # =========================================================
 st.markdown("---")
 st.subheader("🤖 Match Explanation (LLM)")
