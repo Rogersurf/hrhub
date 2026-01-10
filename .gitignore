@@ -11,6 +11,7 @@ __pycache__/
 # Large artifacts – NEVER push to HF
 data/v3/processed/*.npy
 data/v3/processed/*.pkl
+hrhub-artifacts/
 # HF forbidden binaries
 *.npy
 *.pkl
