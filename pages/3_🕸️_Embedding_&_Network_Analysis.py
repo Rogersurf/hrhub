@@ -1,28 +1,45 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import os
+from huggingface_hub import snapshot_download
 
 # =========================================================
 # PAGE CONFIG
 # =========================================================
 st.set_page_config(
     page_title="HRHUB – Embedding & Network Analysis",
-    page_icon="🕸️"
+    page_icon="🕸️",
+    layout="wide"
 )
 
 # =========================================================
-# PATHS (CORRIGIDOS)
+# GLOBAL CSS (LIMIT WIDTH)
 # =========================================================
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DATA_PATH = os.path.join(BASE_PATH, "data")
+st.markdown("""
+<style>
+.viz-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Visualizations (FINAL, STORYTELLING)
-VIS_PATH = os.path.join(DATA_PATH, "visualizations")
+# =========================================================
+# LOAD DATASET (HF WAY)
+# =========================================================
+@st.cache_resource
+def load_artifacts():
+    return snapshot_download(
+        repo_id="Rogersurf/hrhub-artifacts",
+        repo_type="dataset"
+    )
 
-# Results (v3 experimental outputs)
-RES_PATH = os.path.join(DATA_PATH, "v3", "results")
+DATASET_PATH = load_artifacts()
+RESULTS_PATH = os.path.join(DATASET_PATH, "results")
 
-TSNE_HTML = os.path.join(VIS_PATH, "tsne_embedding_space.html")
-NETWORK_HTML = os.path.join(RES_PATH, "network_interactive.html")
+TSNE_HTML = os.path.join(RESULTS_PATH, "tsne_embedding_space.html")
+NETWORK_HTML = os.path.join(RESULTS_PATH, "network_interactive.html")
 
 # =========================================================
 # HEADER
@@ -39,20 +56,24 @@ st.caption(
 st.markdown("""
 ### 1️⃣ Embedding Space Geometry
 
-Candidates and companies are embedded into a **shared 384-dimensional
-semantic vector space** using SBERT.
+Candidates and companies are embedded into a **shared semantic vector space**
+using SBERT.
 
 To make this space interpretable, a **t-SNE projection** is applied,
-mapping the high-dimensional embeddings into two dimensions while
+mapping high-dimensional embeddings into two dimensions while
 preserving local neighborhood structure.
 """)
 
 if os.path.exists(TSNE_HTML):
     st.markdown("#### 🔍 t-SNE Projection (Interactive)")
     with open(TSNE_HTML, "r", encoding="utf-8") as f:
-        st.components.v1.html(f.read(), height=550)
+        html_code = f.read()
+
+    st.markdown('<div class="viz-container">', unsafe_allow_html=True)
+    components.html(html_code, height=650)
+    st.markdown('</div>', unsafe_allow_html=True)
 else:
-    st.error(f"t-SNE file not found at: {TSNE_HTML}")
+    st.warning("t-SNE visualization not found in dataset.")
 
 # =========================================================
 # SECTION 2 — NETWORK GRAPH
@@ -61,11 +82,11 @@ st.markdown("---")
 st.header("2️⃣ Bipartite Matching Network")
 
 st.markdown("""
-The matching relationships can also be represented as a **bipartite graph**:
+Matching relationships can be represented as a **bipartite graph**:
 
 - One node set represents **candidates**
 - One node set represents **companies**
-- Edge weights correspond to **cosine similarity scores**
+- Edge weights correspond to **semantic similarity scores**
 
 This view highlights hubs, dense regions, and structural asymmetries.
 """)
@@ -73,9 +94,13 @@ This view highlights hubs, dense regions, and structural asymmetries.
 if os.path.exists(NETWORK_HTML):
     st.markdown("#### 🌐 Candidate–Company Network (Interactive)")
     with open(NETWORK_HTML, "r", encoding="utf-8") as f:
-        st.components.v1.html(f.read(), height=550)
+        html_code = f.read()
+
+    st.markdown('<div class="viz-container">', unsafe_allow_html=True)
+    components.html(html_code, height=650)
+    st.markdown('</div>', unsafe_allow_html=True)
 else:
-    st.error(f"Network file not found at: {NETWORK_HTML}")
+    st.warning("Network visualization not found in dataset.")
 
 # =========================================================
 # SECTION 3 — INTERPRETATION
@@ -98,7 +123,6 @@ rather than relying on superficial keyword overlap.
 # FOOTER
 # =========================================================
 st.caption(
-    "All visualizations shown on this page are generated offline during "
-    "the preprocessing and evaluation stages and loaded as static HTML "
-    "artifacts for reproducibility."
+    "All visualizations shown on this page are generated offline and "
+    "loaded as static HTML artifacts from the HRHUB dataset."
 )

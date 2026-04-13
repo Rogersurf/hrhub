@@ -1,10 +1,8 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
-import pickle
 import os
+import json
+from huggingface_hub import snapshot_download
 
-from sklearn.metrics.pairwise import cosine_similarity
 
 # =========================================================
 # PAGE CONFIG
@@ -16,165 +14,115 @@ st.set_page_config(
 )
 
 # =========================================================
-# PATHS
-# =========================================================
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DATA_PATH = os.path.join(BASE_PATH, "data", "v3", "processed")
-
-CAND_EMB_PATH = os.path.join(DATA_PATH, "candidate_embeddings.npy")
-COMP_EMB_PATH = os.path.join(DATA_PATH, "company_embeddings.npy")
-
-# =========================================================
-# LOAD DATA
+# DOWNLOAD DATASET (HF CORRETO)
 # =========================================================
 @st.cache_resource
-def load_embeddings():
-    return (
-        np.load(CAND_EMB_PATH),
-        np.load(COMP_EMB_PATH),
+def load_artifacts():
+    return snapshot_download(
+        repo_id="Rogersurf/hrhub-artifacts",
+        repo_type="dataset"
     )
 
-candidate_embeddings, company_embeddings = load_embeddings()
+DATASET_PATH = load_artifacts()
+RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+
+def show_image(filename):
+    path = os.path.join(RESULTS_PATH, filename)
+    if os.path.exists(path):
+        st.image(
+            path,
+            use_column_width=True,
+            width=900)
+    else:
+        st.warning(f"{filename} not found in dataset.")
+
 
 # =========================================================
 # HEADER
 # =========================================================
 st.title("📊 Evaluation & Metrics")
 st.caption(
-    "Quantitative validation of the bilateral semantic matching system. "
-    "This page mirrors the evaluation logic described in the thesis report."
+    "Frozen quantitative evaluation of the bilateral semantic matching system. "
+    "All results shown here were computed offline and loaded from the dataset."
 )
 
 # =========================================================
 # SECTION 1 — SCORE DISTRIBUTION
 # =========================================================
 st.markdown("---")
-st.header("1️⃣ Score Distribution (Global)")
+st.header("1️⃣ Score Distribution")
 
 st.markdown("""
-This histogram shows the **global distribution of cosine similarity scores**
-between candidates and companies in the shared SBERT embedding space.
+Global cosine similarity distribution between candidates and companies
+in the shared SBERT embedding space.
 
-**Key interpretation:**
-- Scores around **0.50–0.60** already indicate strong semantic alignment
-- Scores above **0.70** are rare and exceptional
-- Ranking is more meaningful than absolute thresholds
+**Interpretation:**
+- Scores around **0.55–0.60** already indicate strong semantic alignment
+- Absolute scores are less important than ranking
 """)
 
-@st.cache_data(show_spinner=False)
-def compute_score_distribution(candidate_embeddings, company_embeddings, sample_size=300):
-    scores = []
-    n = min(sample_size, len(candidate_embeddings))
-
-    for i in range(n):
-        sims = cosine_similarity(
-            candidate_embeddings[i].reshape(1, -1),
-            company_embeddings
-        )[0]
-        scores.extend(sims)
-
-    return np.array(scores)
-
-with st.spinner("Computing score distribution..."):
-    score_dist = compute_score_distribution(
-        candidate_embeddings,
-        company_embeddings
-    )
-
-hist = pd.Series(score_dist).value_counts(bins=40).sort_index()
-st.bar_chart(hist)
-
-c1, c2, c3 = st.columns(3)
-c1.metric("Mean Score", f"{score_dist.mean():.3f}")
-c2.metric("95th Percentile", f"{np.percentile(score_dist, 95):.3f}")
-c3.metric("Max Observed", f"{score_dist.max():.3f}")
-
-# =========================================================
-# SECTION 2 — BILATERAL FAIRNESS
-# =========================================================
-st.markdown("---")
-st.header("2️⃣ Bilateral Fairness")
-
-st.markdown("""
-Bilateral fairness evaluates whether the system behaves symmetrically
-for **Candidate → Company** and **Company → Candidate** retrieval.
-
-This is **not demographic fairness**, but **structural fairness** of the algorithm.
-""")
-
-@st.cache_data(show_spinner=False)
-def compute_bilateral_fairness(candidate_embeddings, company_embeddings, top_k=10, sample_size=150):
-    n_cand = min(sample_size, len(candidate_embeddings))
-    n_comp = min(sample_size, len(company_embeddings))
-
-    cand_scores, comp_scores = [], []
-
-    for i in range(n_cand):
-        sims = cosine_similarity(
-            candidate_embeddings[i].reshape(1, -1),
-            company_embeddings
-        )[0]
-        cand_scores.extend(np.sort(sims)[-top_k:])
-
-    for j in range(n_comp):
-        sims = cosine_similarity(
-            company_embeddings[j].reshape(1, -1),
-            candidate_embeddings[:n_cand]
-        )[0]
-        comp_scores.extend(np.sort(sims)[-top_k:])
-
-    c_mean = float(np.mean(cand_scores))
-    co_mean = float(np.mean(comp_scores))
-    fairness = min(c_mean, co_mean) / max(c_mean, co_mean)
-
-    return c_mean, co_mean, fairness
-
-with st.spinner("Computing bilateral fairness..."):
-    cand_mean, comp_mean, fairness = compute_bilateral_fairness(
-        candidate_embeddings,
-        company_embeddings
-    )
-
-f1, f2, f3 = st.columns(3)
-f1.metric("Candidate → Company", f"{cand_mean:.3f}")
-f2.metric("Company → Candidate", f"{comp_mean:.3f}")
-f3.metric("Fairness Ratio", f"{fairness:.3f}")
-
-if fairness >= 0.9:
-    st.success("System is highly balanced")
-elif fairness >= 0.6:
-    st.info("System shows expected balance for Top-K retrieval")
+score_fig = os.path.join(RESULTS_PATH, "score_distribution.png")
+if os.path.exists(score_fig):
+    st.image(score_fig,
+        use_column_width=True,
+        width=900)
 else:
-    st.warning("Potential asymmetry detected")
+    st.warning("Score distribution figure not found in dataset.")
 
 # =========================================================
-# SECTION 3 — COVERAGE & SCALE
+# SECTION 2 — BASELINE COMPARISON
 # =========================================================
 st.markdown("---")
-st.header("3️⃣ Coverage & Scale")
+st.header("2️⃣ Baseline Comparison")
+
+baseline_fig = os.path.join(RESULTS_PATH, "baseline_comparison_all_methods.png")
+if os.path.exists(baseline_fig):
+    st.image(baseline_fig,
+            use_column_width=True,
+            width=900)
+else:
+    st.warning("Baseline comparison figure not found in dataset.")
+
+# =========================================================
+# SECTION 3 — BILATERAL FAIRNESS
+# =========================================================
+st.markdown("---")
+st.header("3️⃣ Bilateral Fairness")
+
+fairness_json = os.path.join(RESULTS_PATH, "evaluation_metrics.json")
+
+if os.path.exists(fairness_json):
+    with open(fairness_json, "r") as f:
+        metrics = json.load(f)
+
+    st.metric(
+        "Fairness Ratio",
+        f"{metrics.get('bilateral_fairness', 'N/A')}"
+    )
+else:
+    st.info(
+        "Bilateral fairness was computed offline. "
+        "Refer to the thesis report for full analysis."
+    )
+
+# =========================================================
+# SECTION 4 — COVERAGE & SCALE
+# =========================================================
+st.markdown("---")
+st.header("4️⃣ Coverage & Scale")
 
 st.markdown("""
-The enrichment pipeline leverages job postings as a **vocabulary bridge**
-between candidates and companies.
-
-This enables:
-- semantic alignment
-- high coverage
-- scalable matching
-""")
-
-st.markdown("""
-**Reported system scale (from preprocessing stage):**
+**System scale (offline preprocessing):**
 - Candidates: **9,544**
 - Companies: **24,473**
 - Job postings: **123,849**
-- Coverage after enrichment: **96.1%**
+- Vocabulary coverage after enrichment: **96.1%**
 """)
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.caption(
-    "All metrics shown here are derived from the same embeddings and matching "
-    "logic used in the Candidate and Company views. No additional models are applied."
+    "This page performs no recomputation. All metrics are loaded from "
+    "the frozen HRHUB artifacts dataset."
 )

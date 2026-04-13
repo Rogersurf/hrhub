@@ -1,8 +1,7 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
 import os
 import json
+from huggingface_hub import snapshot_download
 
 # =========================================================
 # PAGE CONFIG
@@ -14,13 +13,20 @@ st.set_page_config(
 )
 
 # =========================================================
-# PATHS
+# LOAD DATASET (HF WAY)
 # =========================================================
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-EVAL_PATH = os.path.join(BASE_PATH, "data", "evaluation")
+@st.cache_resource
+def load_artifacts():
+    return snapshot_download(
+        repo_id="Rogersurf/hrhub-artifacts",
+        repo_type="dataset"
+    )
 
-BASELINE_JSON = os.path.join(EVAL_PATH, "baseline_results_summary.json")
-BASELINE_PNG = os.path.join(EVAL_PATH, "baseline_comparison_all_methods.png")
+DATASET_PATH = load_artifacts()
+RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+
+BASELINE_JSON = os.path.join(RESULTS_PATH, "baseline_results_summary.json")
+BASELINE_PNG = os.path.join(RESULTS_PATH, "baseline_comparison_all_methods.png")
 
 # =========================================================
 # HEADER
@@ -43,24 +49,30 @@ In applied machine learning, new methods must be validated against
 We compare SBERT against:
 - **TF-IDF + Cosine Similarity** (lexical baseline)
 - **Keyword Overlap (Jaccard)** (set-based baseline)
-
-These baselines represent what a production system *could* use
-if semantic models did not provide sufficient gains.
 """)
 
 # =========================================================
-# SECTION 2 — LOAD RESULTS
+# SECTION 2 — QUANTITATIVE SUMMARY
 # =========================================================
-if not os.path.exists(BASELINE_JSON):
-    st.warning("Baseline evaluation file not found. Showing conceptual comparison only.")
-else:
+st.markdown("---")
+st.subheader("📊 Quantitative Comparison")
+
+if os.path.exists(BASELINE_JSON):
     with open(BASELINE_JSON, "r") as f:
-        baseline_results = json.load(f)
+        metrics = json.load(f)
 
-    df = pd.DataFrame(baseline_results)
+    for k, v in metrics.items():
+        if isinstance(v, (int, float, str)):
+            st.metric(k.replace("_", " ").title(), v)
+        else:
+            st.markdown(f"**{k.replace('_', ' ').title()}**")
+            st.json(v)
 
-    st.subheader("📊 Quantitative Comparison")
-    st.dataframe(df)
+else:
+    st.info(
+        "Baseline metrics were computed offline. "
+        "Refer to the thesis report for full tables."
+    )
 
 # =========================================================
 # SECTION 3 — VISUAL COMPARISON
@@ -72,9 +84,11 @@ if os.path.exists(BASELINE_PNG):
     st.image(
         BASELINE_PNG,
         caption="Performance comparison across TF-IDF, Jaccard, and SBERT",
+        use_column_width=True,
+        width=900
     )
 else:
-    st.info("Visualization not available. See notebook for full plots.")
+    st.warning("Baseline comparison figure not found in dataset.")
 
 # =========================================================
 # SECTION 4 — INTERPRETATION
@@ -82,17 +96,13 @@ else:
 st.markdown("""
 ### Interpretation of Results
 
-Key observations from the comparison:
-
 - **TF-IDF** performs well for exact term overlap but fails under
-  vocabulary mismatch (e.g., synonyms, paraphrases).
-- **Jaccard similarity** is highly brittle and insensitive to context.
-- **SBERT** consistently achieves higher alignment scores and
-  smoother score distributions.
+  vocabulary mismatch.
+- **Jaccard similarity** is brittle and insensitive to context.
+- **SBERT** achieves higher alignment and more stable rankings.
 
-Most importantly, SBERT produces **stable rankings**, which is critical
-in retrieval-based systems where relative order matters more than
-absolute values.
+Stable ranking quality is critical in retrieval-based systems, where
+relative order matters more than absolute score values.
 """)
 
 # =========================================================
@@ -101,20 +111,17 @@ absolute values.
 st.markdown("""
 ### Final Model Choice
 
-Based on:
-- Quantitative improvement over baselines
-- Robustness to vocabulary mismatch
-- Scalability with pre-computed embeddings
-- Compatibility with bilateral matching
+Based on empirical performance, robustness, and scalability,
+**SBERT was selected as the production model**.
 
-**SBERT was selected as the production model**, while classical methods
-remain as reference baselines for validation and interpretability.
+Classical baselines are retained as references for validation
+and interpretability.
 """)
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.caption(
-    "Baseline results shown here are derived from controlled experiments "
-    "and synthetic validation cases described in the thesis report."
+    "All baseline results shown here were computed offline and "
+    "loaded from the frozen HRHUB artifacts dataset."
 )
