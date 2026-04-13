@@ -3,3 +3,4 @@ setuptools>=68
 wheel
 streamlit
 huggingface_hub
+groq

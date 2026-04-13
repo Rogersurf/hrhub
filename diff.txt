@@ -1,0 +1,1466 @@
+
+Only in .: ..bfg-report
+Only in .: .dockerignore
+Only in ./.git: FETCH_HEAD
+Only in ./.git: ORIG_HEAD
+diff -r ./.git/config hf-space/.git/config
+7c7
+< 	url = https://github.com/Rogersurf/hrhub
+---
+> 	url = https://huggingface.co/spaces/Rogersurf/hrhub-final
+12,14d11
+< 	vscode-merge-base = origin/main
+< [lfs]
+< 	repositoryformatversion = 0
+Only in ./.git/hooks: post-checkout
+Only in ./.git/hooks: post-commit
+Only in ./.git/hooks: post-merge
+Only in ./.git/hooks: pre-push
+Binary files ./.git/index and hf-space/.git/index differ
+Only in ./.git: lfs
+diff -r ./.git/logs/HEAD hf-space/.git/logs/HEAD
+1c1
+< 0000000000000000000000000000000000000000 62a34a565c91a13140a0dac9a75c447dc13f3676 root <root@eefd5a1a-ed31-47eb-ac74-3521a883eca5.m1k4x3cq3poebda54cltipn05g.ax.internal.cloudapp.net> 1775638377 +0000	clone: from https://github.com/Rogersurf/hrhub
+---
+> 0000000000000000000000000000000000000000 3055aad191de50282368dd14d0b873ec312a79c7 Rogersurf <57072802+Rogersurf@users.noreply.github.com> 1776070917 +0000	clone: from https://huggingface.co/spaces/Rogersurf/hrhub-final
+diff -r ./.git/logs/refs/heads/main hf-space/.git/logs/refs/heads/main
+1c1
+< 0000000000000000000000000000000000000000 62a34a565c91a13140a0dac9a75c447dc13f3676 root <root@eefd5a1a-ed31-47eb-ac74-3521a883eca5.m1k4x3cq3poebda54cltipn05g.ax.internal.cloudapp.net> 1775638377 +0000	clone: from https://github.com/Rogersurf/hrhub
+---
+> 0000000000000000000000000000000000000000 3055aad191de50282368dd14d0b873ec312a79c7 Rogersurf <57072802+Rogersurf@users.noreply.github.com> 1776070917 +0000	clone: from https://huggingface.co/spaces/Rogersurf/hrhub-final
+Only in ./.git/logs/refs/remotes/origin: Ailee's
+diff -r ./.git/logs/refs/remotes/origin/HEAD hf-space/.git/logs/refs/remotes/origin/HEAD
+1c1
+< 0000000000000000000000000000000000000000 62a34a565c91a13140a0dac9a75c447dc13f3676 root <root@eefd5a1a-ed31-47eb-ac74-3521a883eca5.m1k4x3cq3poebda54cltipn05g.ax.internal.cloudapp.net> 1775638410 +0000	fetch
+---
+> 0000000000000000000000000000000000000000 3055aad191de50282368dd14d0b873ec312a79c7 Rogersurf <57072802+Rogersurf@users.noreply.github.com> 1776070917 +0000	clone: from https://huggingface.co/spaces/Rogersurf/hrhub-final
+Only in ./.git/objects/pack: pack-1c457c3aca39884221de6998ad21c0dac213f5f1.idx
+Only in ./.git/objects/pack: pack-1c457c3aca39884221de6998ad21c0dac213f5f1.pack
+Only in ./.git/objects/pack: pack-1c457c3aca39884221de6998ad21c0dac213f5f1.rev
+Only in hf-space/.git/objects/pack: pack-8486a712490bdbc587e50c9fb48a66bdeb05d36a.idx
+Only in hf-space/.git/objects/pack: pack-8486a712490bdbc587e50c9fb48a66bdeb05d36a.pack
+Only in hf-space/.git/objects/pack: pack-8486a712490bdbc587e50c9fb48a66bdeb05d36a.rev
+Only in ./.git/objects/pack: pack-e24c4c0bcd59c9b444714b5c556f0ec52712b505.idx
+Only in ./.git/objects/pack: pack-e24c4c0bcd59c9b444714b5c556f0ec52712b505.pack
+Only in ./.git/objects/pack: pack-e24c4c0bcd59c9b444714b5c556f0ec52712b505.rev
+diff -r ./.git/packed-refs hf-space/.git/packed-refs
+2c2
+< 62a34a565c91a13140a0dac9a75c447dc13f3676 refs/remotes/origin/main
+---
+> 3055aad191de50282368dd14d0b873ec312a79c7 refs/remotes/origin/main
+diff -r ./.git/refs/heads/main hf-space/.git/refs/heads/main
+1c1
+< 62a34a565c91a13140a0dac9a75c447dc13f3676
+---
+> 3055aad191de50282368dd14d0b873ec312a79c7
+Only in ./.git/refs/remotes/origin: Ailee's
+Only in .: .gitattributes
+diff -r ./.gitignore hf-space/.gitignore
+1,4d0
+< ############################
+< # Environments / Python
+< ############################
+< venv/
+5a2
+> venv/
+9,43d5
+< .bfg-report/
+< 
+< # Large artifacts – NEVER push to HF
+< data/v3/processed/*.npy
+< data/v3/processed/*.pkl
+< hrhub-artifacts/
+< # HF forbidden binaries
+< *.npy
+< *.pkl
+< *.png
+< data/results/
+< data/v3/results/
+< data/v3/processed/
+< data/evaluation/
+< 
+< ############################
+< # OS / Editor
+< ############################
+< .DS_Store
+< *.log
+< 
+< ############################
+< # Secrets / Local config
+< ############################
+< .env
+< .streamlit/
+< 
+< ############################
+< # RAW DATA (ETL ORIGIN)
+< ############################
+< data/csv_files/
+< 
+< ############################
+< # NOTEBOOK JUNK
+< ############################
+44a7
+> .env
+46,63c9,10
+< ############################
+< # NOTEBOOK INTERNAL LIBS (LEGACY)
+< ############################
+< data/notebooks/lib/
+< data/notebooks/processed_data/
+< 
+< ############################
+< # LEGACY / NON-RUNTIME DATA
+< ############################
+< data/processed/
+< data/final/
+< 
+< ############################
+< # TEMP / EXPERIMENTAL OUTPUTS
+< ############################
+< data/results/network_temp.html
+< 
+< 
+---
+> data/
+> hrhub-artifacts/
+\ No newline at end of file
+diff -r ./Dockerfile hf-space/Dockerfile
+1c1
+< # Base image
+---
+> # FORCE REBUILD
+16c16,24
+< # Copy dependency list first (for caching)
+---
+> # ---------------------------------------------------------
+> # HF PRE-BUILD SAFE DEPENDENCIES
+> # ---------------------------------------------------------
+> # Hugging Face runs a pre-build pip install on requirements.txt
+> # using Python 3.13 BEFORE this Dockerfile.
+> # Therefore, requirements.txt MUST stay minimal and compatible.
+> # ---------------------------------------------------------
+> 
+> # Copy minimal requirements first (for HF pre-build + Docker cache)
+19,20c27,46
+< # Install Python dependencies
+< RUN pip install --no-cache-dir -r requirements.txt
+---
+> # Upgrade build tooling and install minimal dependencies
+> RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+>     && pip install --no-cache-dir -r requirements.txt
+> 
+> # ---------------------------------------------------------
+> # APPLICATION DEPENDENCIES (INSTALLED ONLY INSIDE DOCKER)
+> # ---------------------------------------------------------
+> # These dependencies are NOT visible to HF pre-build.
+> # They are installed here with Python 3.10 as intended.
+> # ---------------------------------------------------------
+> 
+> # Copy application-specific requirements
+> COPY requirements_app.txt .
+> 
+> # Install full scientific / application stack
+> RUN pip install --no-cache-dir -r requirements_app.txt
+> 
+> # ---------------------------------------------------------
+> # APPLICATION CODE
+> # ---------------------------------------------------------
+24d49
+< COPY config.py .
+27c52,55
+< COPY data ./data
+---
+> 
+> # ---------------------------------------------------------
+> # STREAMLIT CONFIGURATION
+> # ---------------------------------------------------------
+diff -r ./README.md hf-space/README.md
+2c2
+< title: HRHUB
+---
+> title: HRHUB - FINAL
+6,8c6
+< sdk: streamlit
+< sdk_version: "1.34.0"
+< app_file: app.py
+---
+> sdk: docker
+Only in .: data
+Only in .: diff.txt
+Only in .: hf-space
+diff -r "./pages/0_\360\237\223\212_Evaluation_&_Metrics.py" "hf-space/pages/0_\360\237\223\212_Evaluation_&_Metrics.py"
+2,4d1
+< import numpy as np
+< import pandas as pd
+< import pickle
+5a3,4
+> import json
+> from huggingface_hub import snapshot_download
+7d5
+< from sklearn.metrics.pairwise import cosine_similarity
+19,28c17
+< # PATHS
+< # =========================================================
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< DATA_PATH = os.path.join(BASE_PATH, "data", "v3", "processed")
+< 
+< CAND_EMB_PATH = os.path.join(DATA_PATH, "candidate_embeddings.npy")
+< COMP_EMB_PATH = os.path.join(DATA_PATH, "company_embeddings.npy")
+< 
+< # =========================================================
+< # LOAD DATA
+---
+> # DOWNLOAD DATASET (HF CORRETO)
+31,34c20,23
+< def load_embeddings():
+<     return (
+<         np.load(CAND_EMB_PATH),
+<         np.load(COMP_EMB_PATH),
+---
+> def load_artifacts():
+>     return snapshot_download(
+>         repo_id="Rogersurf/hrhub-artifacts",
+>         repo_type="dataset"
+37c26,38
+< candidate_embeddings, company_embeddings = load_embeddings()
+---
+> DATASET_PATH = load_artifacts()
+> RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+> 
+> def show_image(filename):
+>     path = os.path.join(RESULTS_PATH, filename)
+>     if os.path.exists(path):
+>         st.image(
+>             path,
+>             use_column_width=True,
+>             width=900)
+>     else:
+>         st.warning(f"{filename} not found in dataset.")
+> 
+44,45c45,46
+<     "Quantitative validation of the bilateral semantic matching system. "
+<     "This page mirrors the evaluation logic described in the thesis report."
+---
+>     "Frozen quantitative evaluation of the bilateral semantic matching system. "
+>     "All results shown here were computed offline and loaded from the dataset."
+52c53
+< st.header("1️⃣ Score Distribution (Global)")
+---
+> st.header("1️⃣ Score Distribution")
+55,56c56,57
+< This histogram shows the **global distribution of cosine similarity scores**
+< between candidates and companies in the shared SBERT embedding space.
+---
+> Global cosine similarity distribution between candidates and companies
+> in the shared SBERT embedding space.
+58,61c59,61
+< **Key interpretation:**
+< - Scores around **0.50–0.60** already indicate strong semantic alignment
+< - Scores above **0.70** are rare and exceptional
+< - Ranking is more meaningful than absolute thresholds
+---
+> **Interpretation:**
+> - Scores around **0.55–0.60** already indicate strong semantic alignment
+> - Absolute scores are less important than ranking
+64,82c64,70
+< @st.cache_data(show_spinner=False)
+< def compute_score_distribution(candidate_embeddings, company_embeddings, sample_size=300):
+<     scores = []
+<     n = min(sample_size, len(candidate_embeddings))
+< 
+<     for i in range(n):
+<         sims = cosine_similarity(
+<             candidate_embeddings[i].reshape(1, -1),
+<             company_embeddings
+<         )[0]
+<         scores.extend(sims)
+< 
+<     return np.array(scores)
+< 
+< with st.spinner("Computing score distribution..."):
+<     score_dist = compute_score_distribution(
+<         candidate_embeddings,
+<         company_embeddings
+<     )
+---
+> score_fig = os.path.join(RESULTS_PATH, "score_distribution.png")
+> if os.path.exists(score_fig):
+>     st.image(score_fig,
+>         use_column_width=True,
+>         width=900)
+> else:
+>     st.warning("Score distribution figure not found in dataset.")
+84,85c72,76
+< hist = pd.Series(score_dist).value_counts(bins=40).sort_index()
+< st.bar_chart(hist)
+---
+> # =========================================================
+> # SECTION 2 — BASELINE COMPARISON
+> # =========================================================
+> st.markdown("---")
+> st.header("2️⃣ Baseline Comparison")
+87,90c78,84
+< c1, c2, c3 = st.columns(3)
+< c1.metric("Mean Score", f"{score_dist.mean():.3f}")
+< c2.metric("95th Percentile", f"{np.percentile(score_dist, 95):.3f}")
+< c3.metric("Max Observed", f"{score_dist.max():.3f}")
+---
+> baseline_fig = os.path.join(RESULTS_PATH, "baseline_comparison_all_methods.png")
+> if os.path.exists(baseline_fig):
+>     st.image(baseline_fig,
+>             use_column_width=True,
+>             width=900)
+> else:
+>     st.warning("Baseline comparison figure not found in dataset.")
+93c87
+< # SECTION 2 — BILATERAL FAIRNESS
+---
+> # SECTION 3 — BILATERAL FAIRNESS
+96c90
+< st.header("2️⃣ Bilateral Fairness")
+---
+> st.header("3️⃣ Bilateral Fairness")
+98,100c92
+< st.markdown("""
+< Bilateral fairness evaluates whether the system behaves symmetrically
+< for **Candidate → Company** and **Company → Candidate** retrieval.
+---
+> fairness_json = os.path.join(RESULTS_PATH, "evaluation_metrics.json")
+102,103c94,96
+< This is **not demographic fairness**, but **structural fairness** of the algorithm.
+< """)
+---
+> if os.path.exists(fairness_json):
+>     with open(fairness_json, "r") as f:
+>         metrics = json.load(f)
+105,135c98,100
+< @st.cache_data(show_spinner=False)
+< def compute_bilateral_fairness(candidate_embeddings, company_embeddings, top_k=10, sample_size=150):
+<     n_cand = min(sample_size, len(candidate_embeddings))
+<     n_comp = min(sample_size, len(company_embeddings))
+< 
+<     cand_scores, comp_scores = [], []
+< 
+<     for i in range(n_cand):
+<         sims = cosine_similarity(
+<             candidate_embeddings[i].reshape(1, -1),
+<             company_embeddings
+<         )[0]
+<         cand_scores.extend(np.sort(sims)[-top_k:])
+< 
+<     for j in range(n_comp):
+<         sims = cosine_similarity(
+<             company_embeddings[j].reshape(1, -1),
+<             candidate_embeddings[:n_cand]
+<         )[0]
+<         comp_scores.extend(np.sort(sims)[-top_k:])
+< 
+<     c_mean = float(np.mean(cand_scores))
+<     co_mean = float(np.mean(comp_scores))
+<     fairness = min(c_mean, co_mean) / max(c_mean, co_mean)
+< 
+<     return c_mean, co_mean, fairness
+< 
+< with st.spinner("Computing bilateral fairness..."):
+<     cand_mean, comp_mean, fairness = compute_bilateral_fairness(
+<         candidate_embeddings,
+<         company_embeddings
+---
+>     st.metric(
+>         "Fairness Ratio",
+>         f"{metrics.get('bilateral_fairness', 'N/A')}"
+137,146d101
+< 
+< f1, f2, f3 = st.columns(3)
+< f1.metric("Candidate → Company", f"{cand_mean:.3f}")
+< f2.metric("Company → Candidate", f"{comp_mean:.3f}")
+< f3.metric("Fairness Ratio", f"{fairness:.3f}")
+< 
+< if fairness >= 0.9:
+<     st.success("System is highly balanced")
+< elif fairness >= 0.6:
+<     st.info("System shows expected balance for Top-K retrieval")
+148c103,106
+<     st.warning("Potential asymmetry detected")
+---
+>     st.info(
+>         "Bilateral fairness was computed offline. "
+>         "Refer to the thesis report for full analysis."
+>     )
+151c109
+< # SECTION 3 — COVERAGE & SCALE
+---
+> # SECTION 4 — COVERAGE & SCALE
+154,164c112
+< st.header("3️⃣ Coverage & Scale")
+< 
+< st.markdown("""
+< The enrichment pipeline leverages job postings as a **vocabulary bridge**
+< between candidates and companies.
+< 
+< This enables:
+< - semantic alignment
+< - high coverage
+< - scalable matching
+< """)
+---
+> st.header("4️⃣ Coverage & Scale")
+167c115
+< **Reported system scale (from preprocessing stage):**
+---
+> **System scale (offline preprocessing):**
+171c119
+< - Coverage after enrichment: **96.1%**
+---
+> - Vocabulary coverage after enrichment: **96.1%**
+178,179c126,127
+<     "All metrics shown here are derived from the same embeddings and matching "
+<     "logic used in the Candidate and Company views. No additional models are applied."
+---
+>     "This page performs no recomputation. All metrics are loaded from "
+>     "the frozen HRHUB artifacts dataset."
+diff -r "./pages/1_\360\237\247\252_Baseline_Comparison.py" "hf-space/pages/1_\360\237\247\252_Baseline_Comparison.py"
+2,3d1
+< import numpy as np
+< import pandas as pd
+5a4
+> from huggingface_hub import snapshot_download
+17c16
+< # PATHS
+---
+> # LOAD DATASET (HF WAY)
+19,20c18,26
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< EVAL_PATH = os.path.join(BASE_PATH, "data", "evaluation")
+---
+> @st.cache_resource
+> def load_artifacts():
+>     return snapshot_download(
+>         repo_id="Rogersurf/hrhub-artifacts",
+>         repo_type="dataset"
+>     )
+> 
+> DATASET_PATH = load_artifacts()
+> RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+22,23c28,29
+< BASELINE_JSON = os.path.join(EVAL_PATH, "baseline_results_summary.json")
+< BASELINE_PNG = os.path.join(EVAL_PATH, "baseline_comparison_all_methods.png")
+---
+> BASELINE_JSON = os.path.join(RESULTS_PATH, "baseline_results_summary.json")
+> BASELINE_PNG = os.path.join(RESULTS_PATH, "baseline_comparison_all_methods.png")
+46,48d51
+< 
+< These baselines represent what a production system *could* use
+< if semantic models did not provide sufficient gains.
+52c55
+< # SECTION 2 — LOAD RESULTS
+---
+> # SECTION 2 — QUANTITATIVE SUMMARY
+54,56c57,60
+< if not os.path.exists(BASELINE_JSON):
+<     st.warning("Baseline evaluation file not found. Showing conceptual comparison only.")
+< else:
+---
+> st.markdown("---")
+> st.subheader("📊 Quantitative Comparison")
+> 
+> if os.path.exists(BASELINE_JSON):
+58c62
+<         baseline_results = json.load(f)
+---
+>         metrics = json.load(f)
+60c64,69
+<     df = pd.DataFrame(baseline_results)
+---
+>     for k, v in metrics.items():
+>         if isinstance(v, (int, float, str)):
+>             st.metric(k.replace("_", " ").title(), v)
+>         else:
+>             st.markdown(f"**{k.replace('_', ' ').title()}**")
+>             st.json(v)
+62,63c71,75
+<     st.subheader("📊 Quantitative Comparison")
+<     st.dataframe(df)
+---
+> else:
+>     st.info(
+>         "Baseline metrics were computed offline. "
+>         "Refer to the thesis report for full tables."
+>     )
+74a87,88
+>         use_column_width=True,
+>         width=900
+77c91
+<     st.info("Visualization not available. See notebook for full plots.")
+---
+>     st.warning("Baseline comparison figure not found in dataset.")
+85,86d98
+< Key observations from the comparison:
+< 
+88,95c100,105
+<   vocabulary mismatch (e.g., synonyms, paraphrases).
+< - **Jaccard similarity** is highly brittle and insensitive to context.
+< - **SBERT** consistently achieves higher alignment scores and
+<   smoother score distributions.
+< 
+< Most importantly, SBERT produces **stable rankings**, which is critical
+< in retrieval-based systems where relative order matters more than
+< absolute values.
+---
+>   vocabulary mismatch.
+> - **Jaccard similarity** is brittle and insensitive to context.
+> - **SBERT** achieves higher alignment and more stable rankings.
+> 
+> Stable ranking quality is critical in retrieval-based systems, where
+> relative order matters more than absolute score values.
+104,108c114,115
+< Based on:
+< - Quantitative improvement over baselines
+< - Robustness to vocabulary mismatch
+< - Scalability with pre-computed embeddings
+< - Compatibility with bilateral matching
+---
+> Based on empirical performance, robustness, and scalability,
+> **SBERT was selected as the production model**.
+110,111c117,118
+< **SBERT was selected as the production model**, while classical methods
+< remain as reference baselines for validation and interpretability.
+---
+> Classical baselines are retained as references for validation
+> and interpretability.
+118,119c125,126
+<     "Baseline results shown here are derived from controlled experiments "
+<     "and synthetic validation cases described in the thesis report."
+---
+>     "All baseline results shown here were computed offline and "
+>     "loaded from the frozen HRHUB artifacts dataset."
+diff -r "./pages/2_\360\237\247\240_Skill_&_Vocabulary_Analysis.py" "hf-space/pages/2_\360\237\247\240_Skill_&_Vocabulary_Analysis.py"
+2,3c2
+< import pandas as pd
+< import numpy as np
+---
+> from huggingface_hub import snapshot_download
+5,6c4
+< import pickle
+< from collections import Counter
+---
+> import json
+13c11,12
+<     page_icon="🧠"
+---
+>     page_icon="🧠",
+>     layout="centered"
+17c16
+< # PATHS
+---
+> # LOAD DATASET (HF WAY)
+19,23c18,23
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< DATA_PATH = os.path.join(BASE_PATH, "data")
+< 
+< CSV_PATH = os.path.join(DATA_PATH, "csv_files")
+< PROCESSED_PATH = os.path.join(DATA_PATH, "processed")
+---
+> @st.cache_resource
+> def load_artifacts():
+>     return snapshot_download(
+>         repo_id="Rogersurf/hrhub-artifacts",
+>         repo_type="dataset"
+>     )
+25,29c25,26
+< # Files (existing in your repo)
+< RESUME_CSV = os.path.join(CSV_PATH, "resume_data.csv")
+< JOB_SKILLS_CSV = os.path.join(CSV_PATH, "job_skills.csv")
+< CAND_META_PKL = os.path.join(PROCESSED_PATH, "candidates_metadata.pkl")
+< COMP_META_PKL = os.path.join(PROCESSED_PATH, "companies_metadata.pkl")
+---
+> DATASET_PATH = load_artifacts()
+> RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+36,37c33,34
+<     "This page explains how the system bridges the vocabulary gap between "
+<     "candidates and companies using job postings and skill enrichment."
+---
+>     "How HRHUB resolves vocabulary mismatch between candidates and companies "
+>     "using job postings as semantic bridges."
+46,47c43
+< In recruitment data, **candidates and companies rarely describe skills
+< using the same language**.
+---
+> Candidates and companies **describe similar skills using different language**.
+50,51c46,47
+< - Candidate: *“Python, Pandas, Machine Learning”*
+< - Company: *“Data-driven solutions, analytics pipelines, AI systems”*
+---
+> - Candidate: *Python, Pandas, Machine Learning*
+> - Company: *Data-driven systems, analytics pipelines, AI solutions*
+54d49
+< The HRHUB system addresses this using **job postings as semantic bridges**.
+58,71c53
+< # SECTION 2 — LOAD DATA
+< # =========================================================
+< @st.cache_resource
+< def load_data():
+<     resumes = pd.read_csv(RESUME_CSV)
+<     job_skills = pd.read_csv(JOB_SKILLS_CSV)
+<     candidates_meta = pickle.load(open(CAND_META_PKL, "rb"))
+<     companies_meta = pickle.load(open(COMP_META_PKL, "rb"))
+<     return resumes, job_skills, candidates_meta, companies_meta
+< 
+< resumes_df, job_skills_df, candidates_meta, companies_meta = load_data()
+< 
+< # =========================================================
+< # SECTION 3 — RAW SKILL DISTRIBUTION
+---
+> # SECTION 2 — RAW VS ENRICHED (CONCEPTUAL)
+74,88c56
+< st.header("2️⃣ Raw Skill Distribution (Candidates)")
+< 
+< def extract_candidate_skills(df, max_rows=3000):
+<     skills = []
+<     subset = df.head(max_rows)
+<     for s in subset["skills"].dropna():
+<         skills.extend([x.strip().lower() for x in s.split(",") if len(x) > 1])
+<     return Counter(skills)
+< 
+< raw_skill_counts = extract_candidate_skills(resumes_df)
+< 
+< top_raw = pd.DataFrame(
+<     raw_skill_counts.most_common(15),
+<     columns=["Skill", "Frequency"]
+< )
+---
+> st.header("2️⃣ Raw vs Enriched Skill Vocabulary")
+91,92c59,67
+< This chart reflects **raw, user-provided skills** from candidate resumes.
+< These are typically sparse, noisy, and inconsistent.
+---
+> **Before enrichment:**
+> - Sparse and inconsistent candidate-provided skills
+> - High synonym and abbreviation variance
+> - Severe cold-start for companies
+> 
+> **After enrichment (via job postings):**
+> - Shared vocabulary layer between candidates and companies
+> - Expanded skill coverage
+> - Consistent terminology across entities
+95,96d69
+< st.bar_chart(top_raw.set_index("Skill"))
+< 
+98c71
+< # SECTION 4 — ENRICHED VOCABULARY
+---
+> # SECTION 3 — COVERAGE IMPACT (FROZEN METRICS)
+101c74
+< st.header("3️⃣ Enriched Skill Vocabulary (via Job Postings)")
+---
+> st.header("3️⃣ Coverage Impact")
+103,112c76,79
+< def extract_enriched_skills(job_skills_df, max_rows=8000):
+<     skills = job_skills_df.head(max_rows)["skill_abr"].dropna().str.lower()
+<     return Counter(skills)
+< 
+< enriched_skill_counts = extract_enriched_skills(job_skills_df)
+< 
+< top_enriched = pd.DataFrame(
+<     enriched_skill_counts.most_common(15),
+<     columns=["Skill", "Frequency"]
+< )
+---
+> c1, c2, c3 = st.columns(3)
+> c1.metric("Candidates", "9,544")
+> c2.metric("Companies", "24,473")
+> c3.metric("Vocabulary Coverage", "96.1%")
+115,116c82,84
+< After enrichment, companies inherit skills through their associated
+< job postings. This dramatically increases vocabulary coverage and consistency.
+---
+> Coverage is computed **offline during preprocessing**.
+> Job postings act as semantic bridges that propagate skills to companies,
+> dramatically reducing cold-start issues.
+119,120d86
+< st.bar_chart(top_enriched.set_index("Skill"))
+< 
+122c88
+< # SECTION 5 — COVERAGE IMPACT
+---
+> # SECTION 4 — WHY THIS MATTERS
+125c91
+< st.header("4️⃣ Coverage Impact")
+---
+> st.header("4️⃣ Why Vocabulary Enrichment Matters")
+128,129c94,97
+< The enrichment pipeline increases the number of companies with
+< meaningful skill representations.
+---
+> - Improves recall without sacrificing precision
+> - Enables semantic embeddings to operate on richer inputs
+> - Stabilizes ranking quality across domains
+> - Essential for bilateral (candidate ↔ company) matching
+132,137d99
+< c1, c2, c3 = st.columns(3)
+< 
+< c1.metric("Candidates", f"{len(candidates_meta):,}")
+< c2.metric("Companies", f"{len(companies_meta):,}")
+< c3.metric("Reported Coverage", "96.1%")
+< 
+139c101
+< # SECTION 6 — INTERPRETATION
+---
+> # SECTION 5 — INTERPRETATION
+144,150c106,108
+< Key takeaways:
+< 
+< - Raw candidate skills are sparse and inconsistent
+< - Job postings provide a **shared vocabulary layer**
+< - Skill enrichment reduces cold-start problems
+< - Semantic embeddings amplify this effect by capturing meaning,
+<   not just exact terms
+---
+> The combination of:
+> - vocabulary enrichment (job postings)
+> - semantic embeddings (SBERT)
+152,153c110
+< This combination explains why SBERT-based matching significantly
+< outperforms lexical baselines in both coverage and ranking quality.
+---
+> explains the strong performance gains observed over lexical baselines.
+160,161c117,118
+<     "All statistics shown here are derived from the preprocessing and "
+<     "enrichment stages described in the thesis report."
+---
+>     "This page performs no recomputation. "
+>     "All statistics and conclusions are derived from offline preprocessing."
+diff -r "./pages/3_\360\237\225\270\357\270\217_Embedding_&_Network_Analysis.py" "hf-space/pages/3_\360\237\225\270\357\270\217_Embedding_&_Network_Analysis.py"
+1a2
+> import streamlit.components.v1 as components
+2a4
+> from huggingface_hub import snapshot_download
+9c11,12
+<     page_icon="🕸️"
+---
+>     page_icon="🕸️",
+>     layout="wide"
+13c16
+< # PATHS (CORRIGIDOS)
+---
+> # GLOBAL CSS (LIMIT WIDTH)
+15,19c18,36
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< DATA_PATH = os.path.join(BASE_PATH, "data")
+< 
+< # Visualizations (FINAL, STORYTELLING)
+< VIS_PATH = os.path.join(DATA_PATH, "visualizations")
+---
+> st.markdown("""
+> <style>
+> .viz-container {
+>     width: 100%;
+>     max-width: 1400px;
+>     margin: auto;
+> }
+> </style>
+> """, unsafe_allow_html=True)
+> 
+> # =========================================================
+> # LOAD DATASET (HF WAY)
+> # =========================================================
+> @st.cache_resource
+> def load_artifacts():
+>     return snapshot_download(
+>         repo_id="Rogersurf/hrhub-artifacts",
+>         repo_type="dataset"
+>     )
+21,22c38,39
+< # Results (v3 experimental outputs)
+< RES_PATH = os.path.join(DATA_PATH, "v3", "results")
+---
+> DATASET_PATH = load_artifacts()
+> RESULTS_PATH = os.path.join(DATASET_PATH, "results")
+24,25c41,42
+< TSNE_HTML = os.path.join(VIS_PATH, "tsne_embedding_space.html")
+< NETWORK_HTML = os.path.join(RES_PATH, "network_interactive.html")
+---
+> TSNE_HTML = os.path.join(RESULTS_PATH, "tsne_embedding_space.html")
+> NETWORK_HTML = os.path.join(RESULTS_PATH, "network_interactive.html")
+42,43c59,60
+< Candidates and companies are embedded into a **shared 384-dimensional
+< semantic vector space** using SBERT.
+---
+> Candidates and companies are embedded into a **shared semantic vector space**
+> using SBERT.
+46c63
+< mapping the high-dimensional embeddings into two dimensions while
+---
+> mapping high-dimensional embeddings into two dimensions while
+53c70,74
+<         st.components.v1.html(f.read(), height=550)
+---
+>         html_code = f.read()
+> 
+>     st.markdown('<div class="viz-container">', unsafe_allow_html=True)
+>     components.html(html_code, height=650)
+>     st.markdown('</div>', unsafe_allow_html=True)
+55c76
+<     st.error(f"t-SNE file not found at: {TSNE_HTML}")
+---
+>     st.warning("t-SNE visualization not found in dataset.")
+64c85
+< The matching relationships can also be represented as a **bipartite graph**:
+---
+> Matching relationships can be represented as a **bipartite graph**:
+68c89
+< - Edge weights correspond to **cosine similarity scores**
+---
+> - Edge weights correspond to **semantic similarity scores**
+76c97,101
+<         st.components.v1.html(f.read(), height=550)
+---
+>         html_code = f.read()
+> 
+>     st.markdown('<div class="viz-container">', unsafe_allow_html=True)
+>     components.html(html_code, height=650)
+>     st.markdown('</div>', unsafe_allow_html=True)
+78c103
+<     st.error(f"Network file not found at: {NETWORK_HTML}")
+---
+>     st.warning("Network visualization not found in dataset.")
+101,103c126,127
+<     "All visualizations shown on this page are generated offline during "
+<     "the preprocessing and evaluation stages and loaded as static HTML "
+<     "artifacts for reproducibility."
+---
+>     "All visualizations shown on this page are generated offline and "
+>     "loaded as static HTML artifacts from the HRHUB dataset."
+diff -r "./pages/4_\360\237\221\244_Candidate_View.py" "hf-space/pages/4_\360\237\221\244_Candidate_View.py"
+5a6
+> import json
+8,9c9
+< from dotenv import load_dotenv
+< load_dotenv()
+---
+> from huggingface_hub import hf_hub_download, InferenceClient
+12c12,67
+< # FAIRNESS FUNCTION
+---
+> # PAGE CONFIG
+> # =========================================================
+> st.set_page_config(
+>     page_title="HRHUB - Candidate View",
+>     page_icon="👤",
+>     layout="wide"
+> )
+> 
+> # =========================================================
+> # HF ARTIFACT CONFIG (UNCHANGED LOGIC, CORRECT SOURCE)
+> # =========================================================
+> DATASET_REPO = "Rogersurf/hrhub-artifacts"
+> PROCESSED_DIR = "processed"
+> 
+> # =========================================================
+> # LOAD DATA (HF ARTIFACTS – NO LOCAL FS)
+> # =========================================================
+> @st.cache_resource(show_spinner=True)
+> def load_core():
+>     cand_emb_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/candidate_embeddings.npy",
+>         repo_type="dataset"
+>     )
+>     comp_emb_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/company_embeddings.npy",
+>         repo_type="dataset"
+>     )
+>     cand_meta_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/candidates_metadata.pkl",
+>         repo_type="dataset"
+>     )
+>     comp_meta_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/companies_metadata.pkl",
+>         repo_type="dataset"
+>     )
+> 
+>     candidate_embeddings = np.load(cand_emb_path)
+>     company_embeddings = np.load(comp_emb_path)
+>     candidates_meta = pickle.load(open(cand_meta_path, "rb"))
+>     companies_meta = pickle.load(open(comp_meta_path, "rb"))
+> 
+>     return (
+>         candidate_embeddings,
+>         company_embeddings,
+>         candidates_meta,
+>         companies_meta
+>     )
+> 
+> candidate_embeddings, company_embeddings, candidates_meta, companies_meta = load_core()
+> 
+> # =========================================================
+> # FAIRNESS FUNCTION (UNCHANGED)
+26d80
+<     # Candidate → Company
+32,33c86
+<         top = np.sort(sims)[-top_k:]
+<         cand_scores.extend(top)
+---
+>         cand_scores.extend(np.sort(sims)[-top_k:])
+35d87
+<     # Company → Candidate
+41,42c93
+<         top = np.sort(sims)[-top_k:]
+<         comp_scores.extend(top)
+---
+>         comp_scores.extend(np.sort(sims)[-top_k:])
+46d96
+< 
+47a98
+> 
+61c112
+< # SCORE DISTRIBUTION
+---
+> # SCORE DISTRIBUTION (UNCHANGED)
+82c133
+< # NETWORK GRAPH
+---
+> # NETWORK GRAPH (UNCHANGED)
+104d154
+<     # Candidate nodes
+114d163
+<     # Company nodes + edges
+144c193,203
+< # LLM EXPLANATION
+---
+> # LLM CLIENT (UNCHANGED)
+> # =========================================================
+> @st.cache_resource(show_spinner=False)
+> def get_llm_client():
+>     token = os.getenv("HF_TOKEN")
+>     if not token:
+>         return None
+>     return InferenceClient(token=token)
+> 
+> # =========================================================
+> # LLM EXPLANATION (UNCHANGED)
+147c206
+<     HF_TOKEN = os.getenv("HF_TOKEN")
+---
+>     client = get_llm_client()
+149c208
+<     if not HF_TOKEN:
+---
+>     if client is None:
+151c210
+<             "summary": "Explanation unavailable",
+---
+>             "summary": "LLM not enabled (HF_TOKEN not set).",
+154c213
+<             "recommendation": ""
+---
+>             "recommendation": "Add HF_TOKEN to enable AI explanations."
+157,163c216
+<     try:
+<         from huggingface_hub import InferenceClient
+<         import json
+< 
+<         client = InferenceClient(token=HF_TOKEN)
+< 
+<         prompt = f"""
+---
+>     prompt = f"""
+180c233,234
+< Return a concise explanation in JSON with keys:
+---
+> Return JSON with:
+> - summary
+184d237
+< - summary
+187,233c240,243
+<         response = client.chat_completion(
+<             model="google/gemma-2b-it",
+<             messages=[{"role": "user", "content": prompt}],
+<             max_tokens=300
+<         )
+< 
+<         content = response.choices[0].message.content
+<         return json.loads(content)
+< 
+<     except Exception:
+<         return {
+<             "summary": "Explanation unavailable",
+<             "strengths": [],
+<             "gaps": [],
+<             "recommendation": ""
+<         }
+< 
+< # =========================================================
+< # PAGE CONFIG
+< # =========================================================
+< st.set_page_config(
+<     page_title="HRHUB - Candidate View",
+<     page_icon="👤",
+<     layout="wide"
+< )
+< 
+< # =========================================================
+< # PATHS
+< # =========================================================
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< DATA_PATH = os.path.join(BASE_PATH, "data", "v3", "processed")
+< 
+< CAND_EMB_PATH = os.path.join(DATA_PATH, "candidate_embeddings.npy")
+< COMP_EMB_PATH = os.path.join(DATA_PATH, "company_embeddings.npy")
+< CAND_META_PATH = os.path.join(DATA_PATH, "candidates_metadata.pkl")
+< COMP_META_PATH = os.path.join(DATA_PATH, "companies_metadata.pkl")
+< 
+< # =========================================================
+< # LOAD DATA
+< # =========================================================
+< @st.cache_resource
+< def load_core():
+<     return (
+<         np.load(CAND_EMB_PATH),
+<         np.load(COMP_EMB_PATH),
+<         pickle.load(open(CAND_META_PATH, "rb")),
+<         pickle.load(open(COMP_META_PATH, "rb")),
+---
+>     response = client.chat_completion(
+>         model="meta-llama/Llama-3.2-3B-Instruct",
+>         messages=[{"role": "user", "content": prompt}],
+>         max_tokens=400
+236c246,248
+< candidate_embeddings, company_embeddings, candidates_meta, companies_meta = load_core()
+---
+>     content = response.choices[0].message.content
+>     start, end = content.find("{"), content.rfind("}") + 1
+>     return json.loads(content[start:end])
+311,312d322
+<     st.subheader("🏢 Top Company Matches")
+< 
+364,367c374
+< html_path = os.path.join(BASE_PATH, "data", "v3", "results", "network_candidate.html")
+< os.makedirs(os.path.dirname(html_path), exist_ok=True)
+< net.write_html(html_path)
+< 
+---
+> net.save_graph("network_candidate.html")
+369c376
+< components.html(open(html_path).read(), height=620, scrolling=True)
+---
+> components.html(open("network_candidate.html").read(), height=620, scrolling=True)
+378,380d384
+<     top_company = companies_meta.iloc[top_idx[0]]
+<     top_score = top_scores[0]
+< 
+384,385c388,389
+<             top_company,
+<             top_score
+---
+>             companies_meta.iloc[top_idx[0]],
+>             top_scores[0]
+diff -r "./pages/5_\360\237\217\242_Company_View.py" "hf-space/pages/5_\360\237\217\242_Company_View.py"
+5a6
+> import json
+8,9c9
+< from dotenv import load_dotenv
+< load_dotenv()
+---
+> from huggingface_hub import hf_hub_download, InferenceClient
+12c12
+< # FAIRNESS FUNCTION
+---
+> # PAGE CONFIG
+14,19c14,69
+< def compute_bilateral_fairness(
+<     candidate_embeddings,
+<     company_embeddings,
+<     top_k=10,
+<     sample_size=100
+< ):
+---
+> st.set_page_config(
+>     page_title="HRHUB - Company View",
+>     page_icon="🏢",
+>     layout="wide"
+> )
+> 
+> # =========================================================
+> # HF ARTIFACT CONFIG (SAME AS CANDIDATE VIEW)
+> # =========================================================
+> DATASET_REPO = "Rogersurf/hrhub-artifacts"
+> PROCESSED_DIR = "processed"
+> 
+> # =========================================================
+> # LOAD DATA (HF ARTIFACTS – SAME STANDARD)
+> # =========================================================
+> @st.cache_resource(show_spinner=True)
+> def load_core():
+>     cand_emb_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/candidate_embeddings.npy",
+>         repo_type="dataset"
+>     )
+>     comp_emb_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/company_embeddings.npy",
+>         repo_type="dataset"
+>     )
+>     cand_meta_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/candidates_metadata.pkl",
+>         repo_type="dataset"
+>     )
+>     comp_meta_path = hf_hub_download(
+>         repo_id=DATASET_REPO,
+>         filename=f"{PROCESSED_DIR}/companies_metadata.pkl",
+>         repo_type="dataset"
+>     )
+> 
+>     candidate_embeddings = np.load(cand_emb_path)
+>     company_embeddings = np.load(comp_emb_path)
+>     candidates_meta = pickle.load(open(cand_meta_path, "rb"))
+>     companies_meta = pickle.load(open(comp_meta_path, "rb"))
+> 
+>     return (
+>         candidate_embeddings,
+>         company_embeddings,
+>         candidates_meta,
+>         companies_meta
+>     )
+> 
+> candidate_embeddings, company_embeddings, candidates_meta, companies_meta = load_core()
+> 
+> # =========================================================
+> # FAIRNESS (UNCHANGED)
+> # =========================================================
+> def compute_bilateral_fairness(candidate_embeddings, company_embeddings, top_k=10, sample_size=100):
+23,24c73
+<     cand_scores = []
+<     comp_scores = []
+---
+>     cand_scores, comp_scores = [], []
+26d74
+<     # Candidate → Company
+28,33c76,77
+<         sims = cosine_similarity(
+<             candidate_embeddings[i].reshape(1, -1),
+<             company_embeddings
+<         )[0]
+<         top = np.sort(sims)[-top_k:]
+<         cand_scores.extend(top)
+---
+>         sims = cosine_similarity(candidate_embeddings[i].reshape(1, -1), company_embeddings)[0]
+>         cand_scores.extend(np.sort(sims)[-top_k:])
+35d78
+<     # Company → Candidate
+37,42c80,81
+<         sims = cosine_similarity(
+<             company_embeddings[j].reshape(1, -1),
+<             candidate_embeddings[:n_cand]
+<         )[0]
+<         top = np.sort(sims)[-top_k:]
+<         comp_scores.extend(top)
+---
+>         sims = cosine_similarity(company_embeddings[j].reshape(1, -1), candidate_embeddings[:n_cand])[0]
+>         comp_scores.extend(np.sort(sims)[-top_k:])
+46d84
+< 
+47a86
+> 
+53,79c92
+<     return compute_bilateral_fairness(
+<         candidate_embeddings,
+<         company_embeddings,
+<         top_k=top_k,
+<         sample_size=100
+<     )
+< 
+< # =========================================================
+< # SCORE DISTRIBUTION
+< # =========================================================
+< @st.cache_data(show_spinner=False)
+< def compute_score_distribution(
+<     candidate_embeddings,
+<     company_embeddings,
+<     sample_size=200
+< ):
+<     n = min(sample_size, len(company_embeddings))
+<     scores = []
+< 
+<     for i in range(n):
+<         sims = cosine_similarity(
+<             company_embeddings[i].reshape(1, -1),
+<             candidate_embeddings
+<         )[0]
+<         scores.extend(sims)
+< 
+<     return np.array(scores)
+---
+>     return compute_bilateral_fairness(candidate_embeddings, company_embeddings, top_k)
+82c95
+< # NETWORK GRAPH
+---
+> # LLM CLIENT (SAME AS CANDIDATE VIEW)
+85,140c98,102
+< def build_network_graph(
+<     company_embeddings,
+<     candidate_embeddings,
+<     companies_meta,
+<     candidates_meta,
+<     top_k=3,
+<     sample_size=15
+< ):
+<     from pyvis.network import Network
+< 
+<     net = Network(
+<         height="600px",
+<         width="100%",
+<         bgcolor="#ffffff",
+<         font_color="#2c3e50"
+<     )
+< 
+<     n_comp = min(sample_size, len(company_embeddings))
+< 
+<     # Company nodes
+<     for i in range(n_comp):
+<         label = companies_meta.iloc[i].get("name", f"Company {i}")
+<         net.add_node(
+<             f"comp_{i}",
+<             label=label,
+<             color="#2ecc71",
+<             shape="box",
+<             size=18
+<         )
+< 
+<     # Candidate nodes + edges
+<     for i in range(n_comp):
+<         sims = cosine_similarity(
+<             company_embeddings[i].reshape(1, -1),
+<             candidate_embeddings
+<         )[0]
+< 
+<         top_idx = np.argsort(sims)[-top_k:][::-1]
+< 
+<         for j in top_idx:
+<             net.add_node(
+<                 f"cand_{j}",
+<                 label=f"Candidate {j}",
+<                 color="#667eea",
+<                 shape="dot",
+<                 size=14
+<             )
+< 
+<             net.add_edge(
+<                 f"comp_{i}",
+<                 f"cand_{j}",
+<                 value=float(sims[j]),
+<                 title=f"Score: {sims[j]:.3f}"
+<             )
+< 
+<     return net
+---
+> def get_llm_client():
+>     token = os.getenv("HF_TOKEN")
+>     if not token:
+>         return None
+>     return InferenceClient(token=token)
+143c105
+< # LLM EXPLANATION
+---
+> # LLM EXPLANATION (COMPANY → CANDIDATE)
+146c108
+<     HF_TOKEN = os.getenv("HF_TOKEN")
+---
+>     client = get_llm_client()
+148c110
+<     if not HF_TOKEN:
+---
+>     if client is None:
+150c112
+<             "summary": "LLM not enabled (no HF_TOKEN set).",
+---
+>             "summary": "LLM not enabled (HF_TOKEN not set).",
+153c115
+<             "recommendation": "Enable LLM for detailed explanation."
+---
+>             "recommendation": "Add HF_TOKEN to enable AI explanations."
+156,162c118
+<     try:
+<         from huggingface_hub import InferenceClient
+<         import json
+< 
+<         client = InferenceClient(token=HF_TOKEN)
+< 
+<         prompt = f"""
+---
+>     prompt = f"""
+165c121
+< Explain why the following candidate matches the company.
+---
+> Explain why the following candidate is a good match for the company.
+175c131
+< Objective: {candidate_row.get('career_objective','')}
+---
+> Career Objective: {candidate_row.get('career_objective','')}
+179c135,136
+< Return a concise explanation in JSON with keys:
+---
+> Return JSON with:
+> - summary
+183d139
+< - summary
+186,233c142,145
+<         response = client.chat_completion(
+<             model="meta-llama/Llama-3.2-3B-Instruct",
+<             messages=[{"role": "user", "content": prompt}],
+<             max_tokens=400
+<         )
+< 
+<         content = response.choices[0].message.content
+<         start, end = content.find("{"), content.rfind("}") + 1
+<         return json.loads(content[start:end])
+< 
+<     except Exception as e:
+<         return {
+<             "summary": f"LLM error: {str(e)}",
+<             "strengths": [],
+<             "gaps": [],
+<             "recommendation": "Review manually."
+<         }
+< 
+< # =========================================================
+< # PAGE CONFIG
+< # =========================================================
+< st.set_page_config(
+<     page_title="HRHUB - Company View",
+<     page_icon="🏢",
+<     layout="wide"
+< )
+< 
+< # =========================================================
+< # PATHS
+< # =========================================================
+< BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+< DATA_PATH = os.path.join(BASE_PATH, "data", "v3", "processed")
+< 
+< CAND_EMB_PATH = os.path.join(DATA_PATH, "candidate_embeddings.npy")
+< COMP_EMB_PATH = os.path.join(DATA_PATH, "company_embeddings.npy")
+< CAND_META_PATH = os.path.join(DATA_PATH, "candidates_metadata.pkl")
+< COMP_META_PATH = os.path.join(DATA_PATH, "companies_metadata.pkl")
+< 
+< # =========================================================
+< # LOAD DATA
+< # =========================================================
+< @st.cache_resource
+< def load_core():
+<     return (
+<         np.load(CAND_EMB_PATH),
+<         np.load(COMP_EMB_PATH),
+<         pickle.load(open(CAND_META_PATH, "rb")),
+<         pickle.load(open(COMP_META_PATH, "rb")),
+---
+>     response = client.chat_completion(
+>         model="meta-llama/Llama-3.2-3B-Instruct",
+>         messages=[{"role": "user", "content": prompt}],
+>         max_tokens=400
+236c148,150
+< candidate_embeddings, company_embeddings, candidates_meta, companies_meta = load_core()
+---
+>     content = response.choices[0].message.content
+>     start, end = content.find("{"), content.rfind("}") + 1
+>     return json.loads(content[start:end])
+290c204
+<     candidate = candidates_meta.iloc[idx]
+---
+>     cand = candidates_meta.iloc[idx]
+293c207
+<         "Category": candidate.get("Category","N/A"),
+---
+>         "Category": cand.get("Category","N/A"),
+300c214
+< # MATCH METRICS
+---
+> # METRICS + TABLE
+308,310c222
+<     m3.metric("Strong Matches", (df.Score > threshold).sum())
+< 
+<     st.subheader("👤 Top Candidate Matches")
+---
+>     m3.metric("Strong Matches", int((df.Score > threshold).sum()))
+312,313c224,225
+<     def style_score(val):
+<         return "color: green; font-weight: bold;" if val > threshold else ""
+---
+>     def style_score(v):
+>         return "color: green; font-weight: bold;" if v > threshold else ""
+338,370d249
+< # SCORE DISTRIBUTION
+< # =========================================================
+< st.markdown("---")
+< st.subheader("📈 Score Distribution")
+< 
+< score_dist = compute_score_distribution(
+<     candidate_embeddings,
+<     company_embeddings
+< )
+< 
+< st.bar_chart(pd.Series(score_dist).value_counts(bins=30).sort_index())
+< 
+< # =========================================================
+< # NETWORK GRAPH
+< # =========================================================
+< st.markdown("---")
+< st.subheader("🌐 Matching Network Graph")
+< 
+< net = build_network_graph(
+<     company_embeddings,
+<     candidate_embeddings,
+<     companies_meta,
+<     candidates_meta
+< )
+< 
+< html_path = os.path.join(BASE_PATH, "data", "v3", "results", "network_company.html")
+< os.makedirs(os.path.dirname(html_path), exist_ok=True)
+< net.write_html(html_path)
+< 
+< import streamlit.components.v1 as components
+< components.html(open(html_path).read(), height=620, scrolling=True)
+< 
+< # =========================================================
+377,379d255
+<     top_candidate = candidates_meta.iloc[top_idx[0]]
+<     top_score = top_scores[0]
+< 
+383,384c259,260
+<             top_candidate,
+<             top_score
+---
+>             candidates_meta.iloc[top_idx[0]],
+>             top_scores[0]
+diff -r ./requirements.txt hf-space/requirements.txt
+1,15c1,5
+< streamlit==1.28.0
+< pandas==1.5.3
+< numpy==1.24.3
+< plotly==5.18.0
+< scipy==1.10.1
+< scikit-learn==1.2.2
+< networkx==3.0
+< pyvis==0.3.2
+< python-dotenv==0.21.1
+< requests==2.28.2
+< altair==5.2.0
+< matplotlib==3.7.2
+< seaborn==0.12.2
+< pydeck==0.8.0
+< ipykernel==7.1.0
+\ No newline at end of file
+---
+> pip
+> setuptools>=68
+> wheel
+> streamlit
+> huggingface_hub
+Only in hf-space: requirements_app.txt
+Only in ./utils: __pycache__
+Only in .: venv

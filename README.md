@@ -1,11 +1,9 @@
 ---
-title: HRHUB
+title: HRHUB - FINAL
 emoji: 💼
 colorFrom: green
 colorTo: blue
-sdk: streamlit
-sdk_version: "1.34.0"
-app_file: app.py
+sdk: docker
 pinned: true
 ---
 

@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import os
 import json
+import re
 
 from sklearn.metrics.pairwise import cosine_similarity
 from huggingface_hub import hf_hub_download, InferenceClient
@@ -200,52 +201,85 @@ def get_llm_client():
     return InferenceClient(token=token)
 
 # =========================================================
-# LLM EXPLANATION (UNCHANGED)
+# LLM EXPLANATION (REVISED – NOW RETURNS STRUCTURED OUTPUT)
 # =========================================================
 def explain_match_llm(candidate_row, company_row, score):
-    client = get_llm_client()
+    """
+    Generates a structured match explanation using Groq LLM.
+    Returns a dictionary with keys: summary, strengths, gaps, recommendation.
+    """
+    import os
+    from groq import Groq
 
-    if client is None:
-        return {
-            "summary": "LLM not enabled (HF_TOKEN not set).",
-            "strengths": [],
-            "gaps": [],
-            "recommendation": "Add HF_TOKEN to enable AI explanations."
-        }
+    try:
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    prompt = f"""
-You are an HR analyst.
-
-Explain why the following candidate matches the company.
+        prompt = f"""
+You are an HR analyst. Explain why the following candidate matches the company.
+Provide your answer in valid JSON format with the exact structure below.
 
 CANDIDATE:
-Category: {candidate_row.get('Category','')}
-Skills: {candidate_row.get('skills','')}
-Objective: {candidate_row.get('career_objective','')}
+Category: {candidate_row.get('Category', '')}
+Skills: {candidate_row.get('skills', '')}
+Objective: {candidate_row.get('career_objective', '')}
 
 COMPANY:
-Name: {company_row.get('name','')}
-Industry: {company_row.get('industries_list','')}
-Required Skills: {company_row.get('required_skills','')}
+Name: {company_row.get('name', '')}
+Industry: {company_row.get('industries_list', '')}
+Required Skills: {company_row.get('required_skills', '')}
 
 MATCH SCORE: {score:.3f}
 
-Return JSON with:
-- summary
-- strengths
-- gaps
-- recommendation
+Return ONLY a JSON object like this:
+{{
+  "summary": "A concise paragraph summarizing the overall match.",
+  "strengths": ["Strength 1", "Strength 2", "Strength 3"],
+  "gaps": ["Gap 1", "Gap 2"],
+  "recommendation": "A clear next-step recommendation for the candidate."
+}}
+Do not include any extra text before or after the JSON. The response must be parseable by json.loads().
 """
 
-    response = client.chat_completion(
-        model="meta-llama/Llama-3.2-3B-Instruct",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=400
-    )
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=600
+        )
 
-    content = response.choices[0].message.content
-    start, end = content.find("{"), content.rfind("}") + 1
-    return json.loads(content[start:end])
+        content = response.choices[0].message.content.strip()
+
+        # Attempt to extract JSON from the response (handles occasional markdown wrapping)
+        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', content, re.DOTALL)
+        if json_match:
+            json_str = json_match.group(1)
+        else:
+            # Fallback: take from first '{' to last '}'
+            start = content.find('{')
+            end = content.rfind('}') + 1
+            if start != -1 and end > start:
+                json_str = content[start:end]
+            else:
+                json_str = content
+
+        data = json.loads(json_str)
+
+        # Ensure all expected keys are present
+        return {
+            "summary": data.get("summary", "No summary provided."),
+            "strengths": data.get("strengths", []),
+            "gaps": data.get("gaps", []),
+            "recommendation": data.get("recommendation", "No recommendation.")
+        }
+
+    except Exception as e:
+        # Fallback in case of parsing or API errors
+        return {
+            "summary": f"LLM ERROR: {str(e)}",
+            "strengths": [],
+            "gaps": [],
+            "recommendation": ""
+        }
 
 # =========================================================
 # HEADER
@@ -376,7 +410,7 @@ import streamlit.components.v1 as components
 components.html(open("network_candidate.html").read(), height=620, scrolling=True)
 
 # =========================================================
-# LLM EXPLANATION
+# LLM EXPLANATION (UI REMAINS UNCHANGED)
 # =========================================================
 st.markdown("---")
 st.subheader("🤖 Match Explanation (LLM)")

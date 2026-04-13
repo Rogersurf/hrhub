@@ -4,9 +4,10 @@ import pandas as pd
 import pickle
 import os
 import json
+import re
 
 from sklearn.metrics.pairwise import cosine_similarity
-from huggingface_hub import hf_hub_download, InferenceClient
+from huggingface_hub import hf_hub_download
 
 # =========================================================
 # PAGE CONFIG
@@ -92,30 +93,20 @@ def cached_fairness(candidate_embeddings, company_embeddings, top_k):
     return compute_bilateral_fairness(candidate_embeddings, company_embeddings, top_k)
 
 # =========================================================
-# LLM CLIENT (SAME AS CANDIDATE VIEW)
-# =========================================================
-@st.cache_resource(show_spinner=False)
-def get_llm_client():
-    token = os.getenv("HF_TOKEN")
-    if not token:
-        return None
-    return InferenceClient(token=token)
-
-# =========================================================
-# LLM EXPLANATION (COMPANY → CANDIDATE)
+# LLM EXPLANATION (GROQ VERSION – STRUCTURED JSON)
 # =========================================================
 def explain_match_llm(company_row, candidate_row, score):
-    client = get_llm_client()
+    """
+    Generate a structured match explanation using Groq LLM.
+    Returns a dictionary with keys: summary, strengths, gaps, recommendation.
+    """
+    import os
+    from groq import Groq
 
-    if client is None:
-        return {
-            "summary": "LLM not enabled (HF_TOKEN not set).",
-            "strengths": [],
-            "gaps": [],
-            "recommendation": "Add HF_TOKEN to enable AI explanations."
-        }
+    try:
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    prompt = f"""
+        prompt = f"""
 You are an HR analyst.
 
 Explain why the following candidate is a good match for the company.
@@ -132,22 +123,50 @@ Career Objective: {candidate_row.get('career_objective','')}
 
 MATCH SCORE: {score:.3f}
 
-Return JSON with:
-- summary
-- strengths
-- gaps
-- recommendation
+Return ONLY a valid JSON object with the following structure:
+{{
+  "summary": "A concise paragraph summarizing the match.",
+  "strengths": ["Strength 1", "Strength 2", "Strength 3"],
+  "gaps": ["Gap 1", "Gap 2"],
+  "recommendation": "A clear next-step recommendation."
+}}
+Do not include any text outside the JSON. The response must be parseable by json.loads().
 """
 
-    response = client.chat_completion(
-        model="meta-llama/Llama-3.2-3B-Instruct",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=400
-    )
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",   # Active Groq model as of 2026
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=500
+        )
 
-    content = response.choices[0].message.content
-    start, end = content.find("{"), content.rfind("}") + 1
-    return json.loads(content[start:end])
+        content = response.choices[0].message.content.strip()
+
+        # Extract JSON from possible markdown code block
+        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', content, re.DOTALL)
+        if json_match:
+            json_str = json_match.group(1)
+        else:
+            start = content.find('{')
+            end = content.rfind('}') + 1
+            json_str = content[start:end] if start != -1 and end > start else "{}"
+
+        data = json.loads(json_str)
+
+        return {
+            "summary": data.get("summary", "No summary provided."),
+            "strengths": data.get("strengths", []),
+            "gaps": data.get("gaps", []),
+            "recommendation": data.get("recommendation", "No recommendation.")
+        }
+
+    except Exception as e:
+        return {
+            "summary": f"LLM ERROR: {str(e)}",
+            "strengths": [],
+            "gaps": [],
+            "recommendation": ""
+        }
 
 # =========================================================
 # HEADER
@@ -247,7 +266,7 @@ c2.metric("Company → Candidate", f"{comp_mean:.3f}")
 c3.metric("Fairness Ratio", f"{fairness:.3f}")
 
 # =========================================================
-# LLM EXPLANATION
+# LLM EXPLANATION (UI)
 # =========================================================
 st.markdown("---")
 st.subheader("🤖 Match Explanation (LLM)")

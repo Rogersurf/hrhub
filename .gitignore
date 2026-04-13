@@ -1,65 +1,11 @@
-############################
-# Environments / Python
-############################
-venv/
 .venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
-.bfg-report/
-
-# Large artifacts – NEVER push to HF
-data/v3/processed/*.npy
-data/v3/processed/*.pkl
-hrhub-artifacts/
-# HF forbidden binaries
-*.npy
-*.pkl
-*.png
-data/results/
-data/v3/results/
-data/v3/processed/
-data/evaluation/
-
-############################
-# OS / Editor
-############################
-.DS_Store
-*.log
-
-############################
-# Secrets / Local config
-############################
-.env
-.streamlit/
-
-############################
-# RAW DATA (ETL ORIGIN)
-############################
-data/csv_files/
-
-############################
-# NOTEBOOK JUNK
-############################
 .ipynb_checkpoints/
+.env
 
-############################
-# NOTEBOOK INTERNAL LIBS (LEGACY)
-############################
-data/notebooks/lib/
-data/notebooks/processed_data/
-
-############################
-# LEGACY / NON-RUNTIME DATA
-############################
-data/processed/
-data/final/
-
-############################
-# TEMP / EXPERIMENTAL OUTPUTS
-############################
-data/results/network_temp.html
-
-
+data/
+hrhub-artifacts/hf-space/
 hf-space/
-diff.txt

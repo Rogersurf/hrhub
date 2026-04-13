@@ -1,4 +1,4 @@
-# Base image
+# FORCE REBUILD
 FROM python:3.10-slim
 
 # Avoid Python buffering issues
@@ -13,18 +13,46 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency list first (for caching)
+# ---------------------------------------------------------
+# HF PRE-BUILD SAFE DEPENDENCIES
+# ---------------------------------------------------------
+# Hugging Face runs a pre-build pip install on requirements.txt
+# using Python 3.13 BEFORE this Dockerfile.
+# Therefore, requirements.txt MUST stay minimal and compatible.
+# ---------------------------------------------------------
+
+# Copy minimal requirements first (for HF pre-build + Docker cache)
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade build tooling and install minimal dependencies
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+# ---------------------------------------------------------
+# APPLICATION DEPENDENCIES (INSTALLED ONLY INSIDE DOCKER)
+# ---------------------------------------------------------
+# These dependencies are NOT visible to HF pre-build.
+# They are installed here with Python 3.10 as intended.
+# ---------------------------------------------------------
+
+# Copy application-specific requirements
+COPY requirements_app.txt .
+
+# Install full scientific / application stack
+RUN pip install --no-cache-dir -r requirements_app.txt
+
+# ---------------------------------------------------------
+# APPLICATION CODE
+# ---------------------------------------------------------
 
 # Copy application code
 COPY app.py .
-COPY config.py .
 COPY pages ./pages
 COPY utils ./utils
-COPY data ./data
+
+# ---------------------------------------------------------
+# STREAMLIT CONFIGURATION
+# ---------------------------------------------------------
 
 # Streamlit configuration
 ENV STREAMLIT_SERVER_PORT=7860
